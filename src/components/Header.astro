@@ -1,1 +1,53 @@
-<h1>Header</h1>
+---
+import NavbarMenu from '@/components/navbar/NavbarMenu.astro';
+---
+
+<div class="header">
+  <header>
+    <div class="topbar"></div>
+    <nav class="navbar">
+      <div class="container">
+        <div class="logo">
+          <a href="/"><img src="/src/assets/imgs/logo.svg" alt="logo" /></a>
+        </div>
+        <NavbarMenu client:load />
+      </div>
+    </nav>
+  </header>
+</div>
+
+<style>
+  .topbar {
+    background-color: var(--orange);
+    height: 36px;
+  }
+  .logo {
+    & img {
+      display: block;
+      width: 72px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+
+  .navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    z-index: 999;
+  }
+  .navbar > .container {
+    display: flex;
+    flex-wrap: inherit;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background-color: transparent;
+  }
+
+  @media (max-width: 768px) {
+    .navbar {
+      backdrop-filter: none;
+    }
+  }
+</style>

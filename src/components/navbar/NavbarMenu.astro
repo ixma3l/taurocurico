@@ -1,0 +1,43 @@
+---
+import MenuData from "@/data/MenuData";
+import type { MenuItem, SubMenuItem } from "@/data/MenuData";
+---
+
+<div class="menu">
+  <ul class="navbar-menu">
+    {
+      MenuData.map((item: MenuItem) => (
+        <li>
+          <a href={item.path}>{item.title}</a>
+          {item.subMenu && (
+            <ul class="navbar-submenu">
+              {item.subMenu.map((subItem: SubMenuItem) => (
+                <li>
+                  <a href={subItem.path}>{subItem.title}</a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  function initNavbarToggle() {
+    const navbarToggle = document.querySelector(".navbar-toggle");
+    const navbarMenu = document.querySelector(".navbar-menu");
+
+    navbarToggle?.addEventListener("click", () => {
+      navbarToggle.classList.toggle("active");
+      navbarMenu?.classList.toggle("active");
+    });
+  }
+
+  initNavbarToggle();
+
+  window.addEventListener("astro:page-load", () => {
+    initNavbarToggle();
+  });
+</script>
