@@ -1,0 +1,37 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getBrands } from "@/data/timbres-data";
+import BrandCard from "@/components/timbres/BrandCard.astro";
+
+const brands = getBrands();
+---
+
+<Layout title="Timbres">
+  <section class="container timbres-page">
+    <h1>Timbres</h1>
+    <p>Seleccioná una marca para ver sus familias disponibles.</p>
+
+    <ul class="cards-grid">
+      {brands.map((brand) => (
+        <li>
+          <BrandCard brand={brand} />
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .timbres-page {
+    display: grid;
+    gap: 16px;
+  }
+
+  .cards-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    list-style: none;
+    padding: 0;
+  }
+</style>

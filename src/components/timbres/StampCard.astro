@@ -1,0 +1,52 @@
+---
+import type { TimbreStamp } from "@/data/timbres-data";
+
+const { stamp } = Astro.props as { stamp: TimbreStamp };
+const detailHref = `/timbres/${stamp.brandSlug}/${stamp.familySlug}/${stamp.slug}`;
+---
+
+<a class="stamp-card" href={detailHref} aria-label={`Ver detalle de ${stamp.modelName}`}>
+  <img src={stamp.images.default} width="300" alt={`Timbre ${stamp.modelName}`} loading="lazy" />
+  <h2>{stamp.modelName}</h2>
+</a>
+
+<style>
+  .stamp-card {
+    color: inherit;
+    background: var(--white);
+    border: 1px solid #d9e2ec;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+    padding: 12px;
+    text-decoration: none;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+
+  .stamp-card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #f1f5f9;
+  }
+
+  .stamp-card h2 {
+    color: #102a43;
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+
+  .stamp-card:hover,
+  .stamp-card:focus-visible {
+    box-shadow: 0 6px 16px rgba(16, 42, 67, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .stamp-card:focus-visible {
+    outline: 2px solid #0ea5e9;
+    outline-offset: 2px;
+  }
+</style>

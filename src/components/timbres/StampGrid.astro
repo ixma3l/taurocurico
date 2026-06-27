@@ -1,0 +1,36 @@
+---
+import type { TimbreStamp } from "@/data/timbres-data";
+import StampCard from "@/components/timbres/StampCard.astro";
+
+const { stamps } = Astro.props as { stamps: TimbreStamp[] };
+---
+
+<ul class="stamp-grid">
+  {stamps.map((stamp) => (
+    <li>
+      <StampCard stamp={stamp} />
+    </li>
+  ))}
+</ul>
+
+<style>
+  .stamp-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+    list-style: none;
+    padding: 0;
+  }
+
+  @media (min-width: 640px) {
+    .stamp-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .stamp-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

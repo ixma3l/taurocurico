@@ -1,0 +1,54 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getBrandBySlug, getBrandStaticParams } from "@/data/timbres-data";
+import FamilyCard from "@/components/timbres/FamilyCard.astro";
+
+export const getStaticPaths = () =>
+  getBrandStaticParams().map(({ params }) => ({
+    params,
+    props: { brandSlug: params.brand },
+  }));
+
+const { brandSlug } = Astro.props;
+const brand = brandSlug ? getBrandBySlug(brandSlug) : undefined;
+
+if (!brand) {
+  return Astro.redirect("/404");
+}
+---
+
+<Layout title={`Timbres ${brand.name}`}>
+  <section class="container timbres-page">
+    <h1>{brand.name}</h1>
+    <p>Elegí una familia para ver modelos disponibles.</p>
+
+    {
+      brand.families.length > 0 ? (
+        <ul class="cards-grid">
+          {brand.families.map((family) => (
+            <li>
+              <FamilyCard brand={brand} family={family} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Próximamente vamos a publicar familias para esta marca.</p>
+      )
+    }
+  </section>
+</Layout>
+
+<style>
+  .timbres-page {
+    display: grid;
+    gap: 16px;
+  }
+
+  .cards-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    list-style: none;
+    padding: 0;
+  }
+</style>

@@ -1,0 +1,142 @@
+---
+import {
+  getStampImageForColor,
+  TIMBRE_COLOR_META,
+  type TimbreStamp,
+} from "@/data/timbres-data";
+
+const { stamp } = Astro.props as { stamp: TimbreStamp };
+const initialColor = stamp.colors[0];
+const initialImage = getStampImageForColor(stamp, initialColor);
+---
+
+<article class="stamp-detail" data-stamp-detail data-selected-color={initialColor}>
+  <div class="stamp-detail__media-wrap">
+    <img
+      class="stamp-detail__media"
+      data-stamp-image
+      src={initialImage}
+      alt={`Timbre ${stamp.modelName}`}
+      width="720"
+      loading="eager"
+    />
+  </div>
+
+  <div class="stamp-detail__content">
+    <h1>{stamp.modelName}</h1>
+    <p>{stamp.description}</p>
+    <p><strong>Tamaño:</strong> {stamp.sizeMm.width} × {stamp.sizeMm.height} mm</p>
+
+    <div class="stamp-detail__colors" role="group" aria-label="Colores disponibles">
+      {stamp.colors.map((color) => {
+        const colorMeta = TIMBRE_COLOR_META[color];
+        const imageForColor = getStampImageForColor(stamp, color);
+        const isSelected = color === initialColor;
+
+        return (
+          <button
+            type="button"
+            class={`color-chip ${isSelected ? "is-selected" : ""}`}
+            data-stamp-color
+            data-color={color}
+            data-image={imageForColor}
+            aria-pressed={isSelected ? "true" : "false"}
+          >
+            <span class="color-chip__swatch" style={`--chip-color: ${colorMeta.hex};`} aria-hidden="true" />
+            <span>{colorMeta.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  </div>
+</article>
+
+<script>
+  import { initAllStampDetails } from "./stamp-detail";
+
+  const init = () => initAllStampDetails();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+
+  document.addEventListener("astro:page-load", init);
+</script>
+
+<style>
+  .stamp-detail {
+    display: grid;
+    gap: 20px;
+  }
+
+  .stamp-detail__media-wrap {
+    background: #f8fafc;
+    border: 1px solid #d9e2ec;
+    border-radius: 12px;
+    padding: 12px;
+  }
+
+  .stamp-detail__media {
+    aspect-ratio: 4 / 3;
+    border-radius: 10px;
+    display: block;
+    object-fit: cover;
+    transition: opacity 180ms ease;
+    width: 100%;
+  }
+
+  .stamp-detail__media.is-swapping {
+    opacity: 0.35;
+  }
+
+  .stamp-detail__content {
+    display: grid;
+    gap: 10px;
+  }
+
+  .stamp-detail__colors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .color-chip {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    gap: 8px;
+    padding: 6px 10px;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+
+  .color-chip.is-selected {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+  }
+
+  .color-chip:focus-visible {
+    outline: 2px solid #0ea5e9;
+    outline-offset: 2px;
+  }
+
+  .color-chip__swatch {
+    background: var(--chip-color);
+    border: 1px solid #cbd5e1;
+    border-radius: 50%;
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+  }
+
+  @media (min-width: 1024px) {
+    .stamp-detail {
+      align-items: start;
+      grid-template-columns: 1.25fr 1fr;
+    }
+  }
+</style>

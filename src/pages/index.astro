@@ -1,6 +1,9 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import HeroSlider from '@/components/hero-slider/HeroSlider.astro';
+import { sliderItems } from '@/data/hero-slider.data';
 ---
 
 <Layout title='Tauro Curico'>
+    <HeroSlider items={sliderItems} autoPlayMs={6000} />
 </Layout>

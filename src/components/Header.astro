@@ -1,5 +1,5 @@
 ---
-import NavbarMenu from '@/components/navbar/NavbarMenu.astro';
+import NavbarMenu from '@/components/navbar-menu/NavbarMenu.astro';
 ---
 
 <div class="header">
@@ -8,15 +8,20 @@ import NavbarMenu from '@/components/navbar/NavbarMenu.astro';
     <nav class="navbar">
       <div class="container">
         <div class="logo">
-          <a href="/"><img src="/src/assets/imgs/logo.svg" alt="logo" /></a>
+          <a href="/"><img src="/src/assets/images/logo.svg" alt="logo" /></a>
         </div>
-        <NavbarMenu client:load />
+        <NavbarMenu />
       </div>
     </nav>
   </header>
 </div>
 
 <style>
+  .header {
+    --layer-header: 20;
+    --layer-header-menu: 30;
+  }
+
   .topbar {
     background-color: var(--orange);
     height: 36px;
@@ -31,10 +36,12 @@ import NavbarMenu from '@/components/navbar/NavbarMenu.astro';
   }
 
   .navbar {
+    position: relative;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
-    z-index: 999;
+    z-index: var(--layer-header);
   }
+
   .navbar > .container {
     display: flex;
     flex-wrap: inherit;
@@ -42,10 +49,15 @@ import NavbarMenu from '@/components/navbar/NavbarMenu.astro';
     justify-content: space-between;
     position: sticky;
     top: 0;
+    z-index: var(--layer-header);
     background-color: transparent;
   }
 
   @media (max-width: 768px) {
+    .navbar > .container {
+      width: 100%;
+    }
+
     .navbar {
       backdrop-filter: none;
     }

@@ -1,0 +1,132 @@
+---
+import "./hero-slider.css";
+import type { HeroSlideItem, HeroSliderProps, SlideLayout } from "./hero-slider.types";
+
+const {
+  items = [],
+  autoPlayMs = 4500,
+  ariaLabel = "Promociones destacadas",
+  class: className = "",
+} = Astro.props as HeroSliderProps;
+
+function getLayout(item: HeroSlideItem, index: number): SlideLayout {
+  if (item.layout) return item.layout;
+  return index % 2 === 0 ? "right" : "left";
+}
+
+const safeItems = Array.isArray(items)
+  ? items.filter((item): item is HeroSlideItem =>
+      Boolean(
+        item && item.active !== false && item.title && item.image && item.link,
+      ),
+    )
+  : [];
+---
+
+{
+  safeItems.length > 0 && (
+    <section
+      class={`hero-slider ${className}`}
+      aria-label={ariaLabel}
+      data-hero-slider
+      data-autoplay={autoPlayMs}
+      tabindex="0"
+    >
+      <div class="hero-slider__track">
+        {safeItems.map((item, index) => {
+          const layout = getLayout(item, index);
+          const isReverse = layout === "left";
+
+          return (
+            <article
+              class={`hero-slide ${isReverse ? "hero-slide--reverse" : ""} ${index === 0 ? "is-active" : ""}`}
+              data-slide
+              aria-hidden={index === 0 ? "false" : "true"}
+            >
+              <div class="hero-slide__content">
+                <div class="hero-slide__content-inner">
+                  {item.eyebrow && (
+                    <p class="hero-slide__eyebrow">{item.eyebrow}</p>
+                  )}
+                  <h2 class="hero-slide__title">{item.title}</h2>
+                  {item.description && (
+                    <p class="hero-slide__desc">{item.description}</p>
+                  )}
+
+                  <div class="hero-slide__actions">
+                    <a class="hero-slide__button" href={item.link}>
+                      {item.buttonText ?? "Buy now"}
+                      <span aria-hidden="true">›</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hero-slide__media">
+                <div class="hero-slide__media-inner">
+                  <img
+                    class="hero-slide__image"
+                    src={item.image}
+                    alt={item.title}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    draggable="false"
+                  />
+                </div>
+              </div>
+            </article>
+          );
+        })}
+
+        <div class="hero-slider__controls" aria-label="Controles del slider">
+          <button
+            class="hero-slider__nav"
+            data-prev
+            aria-label="Anterior"
+            type="button"
+          >
+            ‹
+          </button>
+
+          <div class="hero-slider__dots" aria-label="Indicadores">
+            {safeItems.map((item, index) => (
+              <button
+                class={`hero-slider__dot ${index === 0 ? "is-active" : ""}`}
+                data-dot={index}
+                aria-label={`Ir al slide ${index + 1}: ${item.title}`}
+                aria-pressed={index === 0 ? "true" : "false"}
+                type="button"
+              />
+            ))}
+          </div>
+
+          <button
+            class="hero-slider__nav"
+            data-next
+            aria-label="Siguiente"
+            type="button"
+          >
+            ›
+          </button>
+        </div>
+
+        <div class="hero-slider__progress" aria-hidden="true">
+          <div class="hero-slider__progress-bar" data-progress />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  import { initAllHeroSliders } from "./hero-slider";
+
+  const init = () => initAllHeroSliders();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+
+  document.addEventListener("astro:page-load", init);
+</script>

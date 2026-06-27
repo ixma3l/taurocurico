@@ -1,0 +1,41 @@
+---
+import type { TimbreBrand } from "@/data/timbres-data";
+
+const { brand } = Astro.props as { brand: TimbreBrand };
+---
+
+<article class="brand-card">
+  <h2>{brand.name}</h2>
+  <p>{brand.families.length} familias disponibles</p>
+  <a href={`/timbres/${brand.slug}`}>Ver familias</a>
+</article>
+
+<style>
+  .brand-card {
+    background: var(--white);
+    border: 1px solid #d9e2ec;
+    border-radius: 12px;
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .brand-card h2 {
+    color: #102a43;
+    font-size: 1.15rem;
+  }
+
+  .brand-card p {
+    color: #486581;
+  }
+
+  .brand-card a {
+    color: var(--turquoise);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .brand-card a:hover {
+    text-decoration: underline;
+  }
+</style>

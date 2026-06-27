@@ -1,0 +1,429 @@
+---
+import MenuData from "@/data/navbar-menu.data";
+
+interface RenderMenuNode {
+  title: string;
+  path: string;
+  subMenu?: RenderMenuNode[];
+}
+
+const menuItems = MenuData as RenderMenuNode[];
+---
+
+<div class="menu" data-navbar>
+  <button
+    type="button"
+    class="navbar-toggle"
+    aria-expanded="false"
+    aria-controls="navbar-menu"
+    aria-label="Abrir menu de navegacion"
+  >
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+
+  <ul id="navbar-menu" class="navbar-menu">
+    {menuItems.map((item, index) => {
+      const hasSubMenu = Boolean(item.subMenu?.length);
+      const subMenuId = `navbar-main-submenu-0-${index}`;
+
+      return (
+        <li class={`navbar-item${hasSubMenu ? " has-submenu" : ""}`}>
+          {hasSubMenu && !item.path ? (
+            <button
+              type="button"
+              class="navbar-link navbar-submenu-toggle"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls={subMenuId}
+            >
+              <span>{item.title}</span>
+              <svg
+                class="navbar-link-icon"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="m5.75 7.5 4.25 4.25 4.25-4.25"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.75"
+                />
+              </svg>
+            </button>
+          ) : (
+            <a class="navbar-link" href={item.path}>
+              {item.title}
+            </a>
+          )}
+
+          {hasSubMenu && (
+            <ul id={subMenuId} class="navbar-submenu" data-menu-depth={1}>
+              {item.subMenu!.map((subItem, subIndex) => {
+                const hasNestedSubMenu = Boolean(subItem.subMenu?.length);
+                const nestedSubMenuId = `${subMenuId}-submenu-1-${subIndex}`;
+
+                return (
+                  <li class={`navbar-item${hasNestedSubMenu ? " has-submenu" : ""}`}>
+                    {hasNestedSubMenu && !subItem.path ? (
+                      <button
+                        type="button"
+                        class="navbar-link navbar-submenu-toggle"
+                        aria-expanded="false"
+                        aria-haspopup="true"
+                        aria-controls={nestedSubMenuId}
+                      >
+                        <span>{subItem.title}</span>
+                        <svg
+                          class="navbar-link-icon"
+                          viewBox="0 0 20 20"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path
+                            d="m5.75 7.5 4.25 4.25 4.25-4.25"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.75"
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      <a class="navbar-link" href={subItem.path}>
+                        {subItem.title}
+                      </a>
+                    )}
+
+                    {hasNestedSubMenu && (
+                      <ul id={nestedSubMenuId} class="navbar-submenu" data-menu-depth={2}>
+                        {subItem.subMenu!.map((nestedItem) => (
+                          <li class="navbar-item">
+                            <a class="navbar-link" href={nestedItem.path}>
+                              {nestedItem.title}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </li>
+      );
+    })}
+  </ul>
+</div>
+
+<style>
+  .menu {
+    position: relative;
+  }
+
+  .navbar-menu {
+    display: flex;
+    list-style: none;
+    text-align: center;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar-item {
+    position: relative;
+    list-style: none;
+  }
+
+  .navbar-link {
+    display: block;
+    margin: 0 10px;
+    color: #000;
+    font-size: 1.1rem;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    background: transparent;
+  }
+
+  .navbar-link:hover,
+  .navbar-link:focus-visible {
+    background-color: #ccc;
+    color: #000;
+  }
+
+  .navbar-submenu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .navbar-link-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    opacity: 0.8;
+    transform: rotate(0deg);
+    transform-origin: center;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+  }
+
+  .navbar-submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    flex-direction: column;
+    background-color: #eee;
+    margin: 0;
+    padding: 0.5rem 0;
+    min-width: max-content;
+    z-index: var(--layer-header-menu, 30);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.35rem);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .navbar-submenu[data-menu-depth="2"] {
+    margin-left: 0.75rem;
+  }
+
+  .navbar-submenu li {
+    margin: 0.3em 0;
+    list-style: none;
+  }
+
+  .navbar-submenu-toggle:focus-visible .navbar-link-icon,
+  .has-submenu.is-open > .navbar-submenu-toggle .navbar-link-icon {
+    opacity: 1;
+  }
+
+  .has-submenu.is-open > .navbar-submenu-toggle .navbar-link-icon {
+    transform: rotate(180deg);
+  }
+
+  .navbar-menu.active {
+    display: flex;
+  }
+
+  .navbar-toggle {
+    display: none;
+    background: transparent;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    background-color: var(--black);
+    transition: all 0.3s ease;
+  }
+
+  @media (max-width: 768px) {
+    .menu {
+      background-color: grey;
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      z-index: var(--layer-header-menu, 30);
+    }
+
+    .navbar-menu {
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.7rem !important;
+      width: 250px;
+      padding: 0 0 1.5rem;
+      margin-top: 33px;
+    }
+
+    .navbar-submenu {
+      position: static;
+      display: none;
+      background-color: #eee;
+      padding: 0.5rem 0;
+      min-width: max-content;
+      margin-top: 0.5rem;
+      margin-left: 1rem;
+    }
+
+    .navbar-submenu-toggle {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .navbar-toggle {
+      display: block;
+      z-index: var(--layer-header-menu, 30);
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    .navbar-toggle.active .bar:nth-child(2) {
+      opacity: 0;
+    }
+
+    .navbar-toggle.active .bar:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .navbar-toggle.active .bar:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+  }
+
+  @media (min-width: 769px) {
+    .navbar-submenu {
+      display: flex;
+      visibility: hidden;
+    }
+
+    .navbar-submenu[data-menu-depth="2"] {
+      top: 0;
+      left: 100%;
+      margin-left: 0;
+    }
+  }
+
+  .has-submenu.is-open > .navbar-submenu {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+</style>
+<script>
+  function initNavbarToggle() {
+    document.querySelectorAll("[data-navbar]").forEach((navbar) => {
+      const navbarToggle = navbar.querySelector(".navbar-toggle");
+      const navbarMenu = navbar.querySelector(".navbar-menu");
+      const submenuToggles = Array.from(
+        navbar.querySelectorAll(".navbar-submenu-toggle")
+      ).filter((toggle): toggle is HTMLButtonElement => toggle instanceof HTMLButtonElement);
+
+      if (!(navbarToggle instanceof HTMLButtonElement) || !(navbarMenu instanceof HTMLElement)) {
+        return;
+      }
+
+      if (navbarToggle.dataset.initialized === "true") {
+        return;
+      }
+
+      navbarToggle.dataset.initialized = "true";
+
+      const isMobileViewport = () => window.matchMedia("(max-width: 768px)").matches;
+
+      const closeSubmenus = (exceptToggle?: HTMLButtonElement) => {
+        submenuToggles.forEach((toggle) => {
+          const shouldKeepOpen =
+            exceptToggle === toggle ||
+            (Boolean(exceptToggle) &&
+              toggle.closest(".has-submenu")?.contains(exceptToggle as Node));
+
+          toggle.setAttribute("aria-expanded", "false");
+
+          if (!shouldKeepOpen) {
+            toggle.closest(".has-submenu")?.classList.remove("is-open");
+            return;
+          }
+
+          toggle.setAttribute("aria-expanded", "true");
+          toggle.closest(".has-submenu")?.classList.add("is-open");
+        });
+      };
+
+      const closeMenu = () => {
+        navbarToggle.classList.remove("active");
+        navbarMenu.classList.remove("active");
+        navbarToggle.setAttribute("aria-expanded", "false");
+        navbarToggle.setAttribute("aria-label", "Abrir menu de navegacion");
+        closeSubmenus();
+      };
+
+      navbarToggle.addEventListener("click", () => {
+        const isExpanded = navbarToggle.getAttribute("aria-expanded") === "true";
+        const nextExpanded = String(!isExpanded);
+
+        navbarToggle.classList.toggle("active", !isExpanded);
+        navbarMenu.classList.toggle("active", !isExpanded);
+        navbarToggle.setAttribute("aria-expanded", nextExpanded);
+        navbarToggle.setAttribute(
+          "aria-label",
+          isExpanded ? "Abrir menu de navegacion" : "Cerrar menu de navegacion"
+        );
+
+        if (isExpanded) {
+          closeSubmenus();
+        }
+      });
+
+      submenuToggles.forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+          const parentItem = toggle.closest(".has-submenu");
+
+          if (!(parentItem instanceof HTMLElement)) {
+            return;
+          }
+
+          const isOpen = parentItem.classList.contains("is-open");
+
+          if (isOpen) {
+            closeSubmenus();
+            return;
+          }
+
+          closeSubmenus(toggle);
+        });
+      });
+
+      navbar.addEventListener("keydown", (event) => {
+        if (!(event instanceof KeyboardEvent)) {
+          return;
+        }
+
+        if (event.key !== "Escape") {
+          return;
+        }
+
+        closeSubmenus();
+
+        if (isMobileViewport() && navbarMenu.classList.contains("active")) {
+          closeMenu();
+        }
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!(event.target instanceof Node) || navbar.contains(event.target)) {
+          return;
+        }
+
+        closeMenu();
+      });
+    });
+  }
+
+  initNavbarToggle();
+
+  window.addEventListener("astro:page-load", () => {
+    initNavbarToggle();
+  });
+</script>

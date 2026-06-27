@@ -1,0 +1,42 @@
+---
+import StampDetail from "@/components/timbres/StampDetail.astro";
+import {
+  getStampBySlugs,
+  getStampStaticParams,
+} from "@/data/timbres-data";
+import Layout from "@/layouts/Layout.astro";
+
+export const getStaticPaths = () =>
+  getStampStaticParams().map(({ params }) => ({
+    params,
+    props: {
+      brandSlug: params.brand,
+      familySlug: params.family,
+      stampSlug: params.stamp,
+    },
+  }));
+
+const { brandSlug, familySlug, stampSlug } = Astro.props;
+const stamp =
+  brandSlug && familySlug && stampSlug
+    ? getStampBySlugs(brandSlug, familySlug, stampSlug)
+    : undefined;
+
+if (!stamp) {
+  return Astro.redirect("/404");
+}
+---
+
+<Layout title={`Timbre ${stamp.modelName}`}>
+  <section class="container timbre-detail-page">
+    <a href={`/timbres/${stamp.brandSlug}/${stamp.familySlug}`}>← Volver a {stamp.familySlug}</a>
+    <StampDetail stamp={stamp} />
+  </section>
+</Layout>
+
+<style>
+  .timbre-detail-page {
+    display: grid;
+    gap: 14px;
+  }
+</style>

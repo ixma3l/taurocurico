@@ -1,0 +1,47 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import {
+  getBrandBySlug,
+  getFamilyBySlugs,
+  getFamilyStaticParams,
+} from "@/data/timbres-data";
+import StampGrid from "@/components/timbres/StampGrid.astro";
+
+export const getStaticPaths = () =>
+  getFamilyStaticParams().map(({ params }) => ({
+    params,
+    props: {
+      brandSlug: params.brand,
+      familySlug: params.family,
+    },
+  }));
+
+const { brandSlug, familySlug } = Astro.props;
+const brand = brandSlug ? getBrandBySlug(brandSlug) : undefined;
+const family = brandSlug && familySlug ? getFamilyBySlugs(brandSlug, familySlug) : undefined;
+
+if (!brand || !family) {
+  return Astro.redirect("/404");
+}
+---
+
+<Layout title={`Timbres ${brand.name} ${family.name}`}>
+  <section class="container timbres-page">
+    <h1>{brand.name} · {family.name}</h1>
+
+    {
+      family.stamps.length > 0 ? (
+        <StampGrid stamps={family.stamps} />
+      ) : (
+        <p>No hay modelos publicados en esta familia todavía.</p>
+      )
+    }
+  </section>
+</Layout>
+
+<style>
+  .timbres-page {
+    display: grid;
+    gap: 16px;
+  }
+</style>

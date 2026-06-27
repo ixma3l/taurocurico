@@ -1,6 +1,9 @@
+import { buildTimbresMenuTree } from "@/data/timbres-data";
+
 export interface SubMenuItem {
   title: string;
   path: string;
+  subMenu?: SubMenuItem[];
 }
 
 export interface MenuItem {
@@ -9,6 +12,15 @@ export interface MenuItem {
   path: string;
   subMenu?: SubMenuItem[];
 }
+
+const timbresSubMenu: SubMenuItem[] = buildTimbresMenuTree().map((brandNode) => ({
+  title: brandNode.title,
+  path: "",
+  subMenu: brandNode.children?.map((familyNode) => ({
+    title: familyNode.title,
+    path: familyNode.path,
+  })),
+}));
 
 export const MenuData: MenuItem[] = [
   {
@@ -25,13 +37,16 @@ export const MenuData: MenuItem[] = [
     id: 3,
     title: "Timbres",
     path: "",
-    subMenu: [
-      { title: "Imprint", path: "/timbres/imprint" },
-      { title: "Trodat", path: "/timbres/trodat" },
-    ],
+    subMenu: timbresSubMenu,
   },
   {
     id: 4,
+    title: "Servicios",
+    path: "/servicios",
+    subMenu: timbresSubMenu,
+  },
+  {
+    id: 5,
     title: "Contacto",
     path: "/contacto",
   },
