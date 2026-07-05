@@ -23,5 +23,11 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-src/assets/imgs/uploads/
+# local AI metadata
+.atl/
+.pi/
 
+# npm lockfile (project uses pnpm)
+package-lock.json
+
+src/assets/imgs/uploads/
