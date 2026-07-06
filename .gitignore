@@ -30,4 +30,4 @@ pnpm-debug.log*
 # npm lockfile (project uses pnpm)
 package-lock.json
 
-src/assets/imgs/uploads/
+src/assets/images/uploads/
