@@ -74,54 +74,19 @@ export interface TimbresStampRouteParams {
   };
 }
 
-type RuntimeImageModule =
-  | { default: string }
-  | { default: { src: string } }
-  | { src: string };
-
-const TIMBRE_ASSET_MODULES = import.meta.glob<RuntimeImageModule>(
-  "../assets/images/uploads/timbres/*.{jpg,jpeg,png,webp}",
-  { eager: true },
-);
-
-const getRuntimeImageUrl = (module: RuntimeImageModule): string => {
-  if ("default" in module) {
-    return typeof module.default === "string" ? module.default : module.default.src;
-  }
-
-  return module.src;
-};
-
-const TIMBRE_ASSET_URL_BY_NAME = new Map(
-  Object.entries(TIMBRE_ASSET_MODULES).map(([modulePath, module]) => [
-    modulePath.split("/").pop() ?? modulePath,
-    getRuntimeImageUrl(module),
-  ]),
-);
-
 const resolveStampImageUrl = (imagePath: string): string => {
   const normalized = imagePath.trim();
   if (!normalized) {
     return normalized;
   }
 
+  const uploadsIndex = normalized.indexOf("/uploads/");
+  if (uploadsIndex >= 0) {
+    return normalized.slice(uploadsIndex);
+  }
+
   if (normalized.startsWith("/")) {
     return normalized;
-  }
-
-  const fileName = normalized.split("/").pop();
-  if (!fileName) {
-    return normalized;
-  }
-
-  const bundledUrl = TIMBRE_ASSET_URL_BY_NAME.get(fileName);
-  if (bundledUrl) {
-    return bundledUrl;
-  }
-
-  const srcAssetsIndex = normalized.indexOf("/src/assets/");
-  if (srcAssetsIndex >= 0) {
-    return normalized.slice(srcAssetsIndex);
   }
 
   return normalized;
