@@ -11,6 +11,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "check": "astro check",
+    "validate": "pnpm test && pnpm check && pnpm build",
     "test": "vitest run"
   },
   "dependencies": {

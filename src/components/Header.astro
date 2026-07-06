@@ -1,5 +1,6 @@
 ---
 import NavbarMenu from '@/components/navbar-menu/NavbarMenu.astro';
+import logoUrl from '@/assets/images/logo.svg?url';
 ---
 
 <div class="header">
@@ -8,7 +9,7 @@ import NavbarMenu from '@/components/navbar-menu/NavbarMenu.astro';
     <nav class="navbar">
       <div class="container">
         <div class="logo">
-          <a href="/"><img src="/src/assets/images/logo.svg" alt="logo" /></a>
+          <a href="/"><img src={logoUrl} alt="Tauro Curicó logo" /></a>
         </div>
         <NavbarMenu />
       </div>

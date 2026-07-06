@@ -1,33 +1,35 @@
 import type { HeroSlideItem } from "@/components/hero-slider/hero-slider.types";
+import backgroundUrl from "@/assets/background.svg?url";
+import logoUrl from "@/assets/images/logo.svg?url";
 
 export const sliderItems: HeroSlideItem[] = [
   {
-    eyebrow: "Limited time offer!",
-    title: "Huge Summer Sale",
-    description: "La imagen entra primero desde arriba y luego aparece el contenido.",
-    image: "https://bigbag-html.netlify.app/assets/img/home/banner-slider/sl1.png",
+    eyebrow: "Tauro Curicó",
+    title: "Timbres automáticos para tu negocio",
+    description: "Soluciones Trodat para oficina, comercio y uso profesional.",
+    image: logoUrl,
     link: "#",
-    buttonText: "Buy now",
+    buttonText: "Ver catálogo",
     layout: "right",
     active: true,
   },
   {
-    eyebrow: "Limited time offer!",
-    title: "Ladies Backpack",
-    description: "Este slide está desactivado.",
-    image: "https://bigbag-html.netlify.app/assets/img/home/banner-slider/sl2.png",
+    eyebrow: "Catálogo especializado",
+    title: "Modelos para cada necesidad",
+    description: "Encuentra formatos redondos, cuadrados y rectangulares según tu uso.",
+    image: backgroundUrl,
     link: "#",
-    buttonText: "Buy now",
+    buttonText: "Explorar timbres",
     layout: "left",
     active: true,
   },
   {
-    eyebrow: "Limited time offer!",
-    title: "Canvas Sneaker",
-    description: "Este sí se mostrará.",
-    image: "https://bigbag-html.netlify.app/assets/img/home/banner-slider/shoe1.png",
+    eyebrow: "Atención local",
+    title: "Asesoría para elegir tu timbre",
+    description: "Te ayudamos a seleccionar el modelo adecuado para tu marca o documento.",
+    image: logoUrl,
     link: "#",
-    buttonText: "Buy now",
+    buttonText: "Contactar",
     active: true,
   },
 ];
