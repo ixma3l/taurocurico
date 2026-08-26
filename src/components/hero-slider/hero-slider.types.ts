@@ -13,7 +13,6 @@ export interface HeroSlideItem {
 
 export interface HeroSliderProps {
   items?: HeroSlideItem[];
-  autoPlayMs?: number;
   ariaLabel?: string;
   class?: string;
 }

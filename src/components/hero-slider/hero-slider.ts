@@ -1,105 +1,141 @@
-export function initHeroSlider(root: HTMLElement): void {
-  if (
-    (root as HTMLElement & { __heroSliderReady?: boolean }).__heroSliderReady
-  ) {
-    return;
-  }
+const TRANSITION_PHASE_MS = 500;
+const SWIPE_THRESHOLD_PX = 50;
 
-  (root as HTMLElement & { __heroSliderReady?: boolean }).__heroSliderReady =
-    true;
+type SliderRoot = HTMLElement & { __heroSliderReady?: boolean };
+
+export function initHeroSlider(root: HTMLElement): void {
+  const sliderRoot = root as SliderRoot;
+  if (sliderRoot.__heroSliderReady) return;
 
   const slides = Array.from(root.querySelectorAll<HTMLElement>("[data-slide]"));
+  if (!slides.length) return;
+
+  sliderRoot.__heroSliderReady = true;
+
   const dots = Array.from(
     root.querySelectorAll<HTMLButtonElement>("[data-dot]"),
   );
   const prevBtn = root.querySelector<HTMLButtonElement>("[data-prev]");
   const nextBtn = root.querySelector<HTMLButtonElement>("[data-next]");
-  const progressBar = root.querySelector<HTMLElement>("[data-progress]");
+  const controls = root.querySelector<HTMLElement>("[data-controls]");
+  const view = root.ownerDocument.defaultView ?? window;
+  const reducedMotion = view.matchMedia?.(
+    "(prefers-reduced-motion: reduce)",
+  ).matches ?? false;
 
-  if (!slides.length) return;
-
-  const autoPlayMs = Number(root.dataset.autoplay ?? "4500");
   let current = 0;
-  let autoplayId: number | null = null;
+  let isAnimating = false;
+  let touchStartX: number | null = null;
 
-  const restartProgress = () => {
-    if (!progressBar) return;
-    progressBar.classList.remove("is-animating");
-    progressBar.style.setProperty("--autoplay", `${autoPlayMs}ms`);
-    void progressBar.offsetWidth;
-    progressBar.classList.add("is-animating");
+  if (controls) controls.hidden = slides.length < 2;
+
+  const setSlideAccessibility = (activeIndex: number | null) => {
+    slides.forEach((slide, index) => {
+      const isActive = index === activeIndex;
+      slide.setAttribute("aria-hidden", String(!isActive));
+      slide.inert = !isActive;
+    });
   };
 
-  const setSlide = (index: number) => {
-    current = (index + slides.length) % slides.length;
-
-    slides.forEach((slide, i) => {
-      const isActive = i === current;
-      slide.classList.toggle("is-active", isActive);
-      slide.setAttribute("aria-hidden", String(!isActive));
-    });
-
-    dots.forEach((dot, i) => {
-      const isActive = i === current;
+  const updateDots = () => {
+    dots.forEach((dot, index) => {
+      const isActive = index === current;
       dot.classList.toggle("is-active", isActive);
       dot.setAttribute("aria-pressed", String(isActive));
     });
-
-    restartProgress();
   };
 
-  const nextSlide = () => setSlide(current + 1);
-  const prevSlide = () => setSlide(current - 1);
-
-  const stopAutoplay = () => {
-    if (autoplayId !== null) {
-      window.clearInterval(autoplayId);
-      autoplayId = null;
-    }
+  const showSlide = (index: number) => {
+    slides.forEach((slide, slideIndex) => {
+      const isActive = slideIndex === index;
+      slide.classList.toggle("is-active", isActive);
+      slide.classList.remove("is-leaving");
+    });
+    setSlideAccessibility(index);
   };
 
-  const startAutoplay = () => {
-    if (slides.length <= 1) {
-      restartProgress();
+  const goToSlide = (index: number) => {
+    if (slides.length < 2 || isAnimating) return;
+
+    const target = (index + slides.length) % slides.length;
+    if (target === current) return;
+
+    if (reducedMotion) {
+      current = target;
+      updateDots();
+      showSlide(current);
       return;
     }
 
-    stopAutoplay();
-    autoplayId = window.setInterval(nextSlide, autoPlayMs);
-    restartProgress();
+    isAnimating = true;
+    const previous = current;
+    current = target;
+
+    updateDots();
+    slides[previous].classList.remove("is-active");
+    slides[previous].classList.add("is-leaving");
+    setSlideAccessibility(null);
+
+    view.setTimeout(() => {
+      slides[previous].classList.remove("is-leaving");
+      slides[current].classList.add("is-active");
+      setSlideAccessibility(current);
+
+      view.setTimeout(() => {
+        isAnimating = false;
+      }, TRANSITION_PHASE_MS);
+    }, TRANSITION_PHASE_MS);
   };
 
-  prevBtn?.addEventListener("click", () => {
-    prevSlide();
-    startAutoplay();
-  });
+  const nextSlide = () => goToSlide(current + 1);
+  const prevSlide = () => goToSlide(current - 1);
 
-  nextBtn?.addEventListener("click", () => {
-    nextSlide();
-    startAutoplay();
-  });
+  prevBtn?.addEventListener("click", prevSlide);
+  nextBtn?.addEventListener("click", nextSlide);
 
   dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      setSlide(index);
-      startAutoplay();
-    });
+    dot.addEventListener("click", () => goToSlide(index));
   });
 
   root.addEventListener("keydown", (event: KeyboardEvent) => {
     if (event.key === "ArrowRight") {
+      event.preventDefault();
       nextSlide();
-      startAutoplay();
-    }
-
-    if (event.key === "ArrowLeft") {
+    } else if (event.key === "ArrowLeft") {
+      event.preventDefault();
       prevSlide();
-      startAutoplay();
     }
   });
 
-  setSlide(0);
-  startAutoplay();
+  root.addEventListener(
+    "touchstart",
+    (event: TouchEvent) => {
+      touchStartX = event.changedTouches[0]?.screenX ?? null;
+    },
+    { passive: true },
+  );
+
+  root.addEventListener(
+    "touchend",
+    (event: TouchEvent) => {
+      const touchEndX = event.changedTouches[0]?.screenX;
+      if (touchStartX === null || touchEndX === undefined) return;
+
+      const distance = touchEndX - touchStartX;
+      touchStartX = null;
+
+      if (distance < -SWIPE_THRESHOLD_PX) nextSlide();
+      else if (distance > SWIPE_THRESHOLD_PX) prevSlide();
+    },
+    { passive: true },
+  );
+
+  current = Math.max(
+    0,
+    slides.findIndex((slide) => slide.classList.contains("is-active")),
+  );
+  showSlide(current);
+  updateDots();
 }
 
 export function initAllHeroSliders(): void {
