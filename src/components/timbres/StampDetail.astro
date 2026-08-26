@@ -18,36 +18,56 @@ const initialImage = getStampImageForColor(stamp, initialColor);
       src={initialImage}
       alt={`Timbre ${stamp.modelName}`}
       width="720"
+      height="540"
       loading="eager"
     />
   </div>
 
   <div class="stamp-detail__content">
-    <h1>{stamp.modelName}</h1>
-    <p>{stamp.description}</p>
-    <p><strong>Tamaño:</strong> {stamp.sizeMm.width} × {stamp.sizeMm.height} mm</p>
-
-    <div class="stamp-detail__colors" role="group" aria-label="Colores disponibles">
-      {stamp.colors.map((color) => {
-        const colorMeta = TIMBRE_COLOR_META[color];
-        const imageForColor = getStampImageForColor(stamp, color);
-        const isSelected = color === initialColor;
-
-        return (
-          <button
-            type="button"
-            class={`color-chip ${isSelected ? "is-selected" : ""}`}
-            data-stamp-color
-            data-color={color}
-            data-image={imageForColor}
-            aria-pressed={isSelected ? "true" : "false"}
-          >
-            <span class="color-chip__swatch" style={`--chip-color: ${colorMeta.hex};`} aria-hidden="true" />
-            <span>{colorMeta.label}</span>
-          </button>
-        );
-      })}
+    <div class="stamp-detail__introduction">
+      <p class="stamp-detail__eyebrow">Timbre personalizado</p>
+      <h1>{stamp.modelName}</h1>
+      <p class="stamp-detail__description">{stamp.description}</p>
     </div>
+
+    <fieldset class="stamp-detail__color-selector">
+      <legend>Colores disponibles</legend>
+      <div class="stamp-detail__colors">
+        {stamp.colors.map((color) => {
+          const colorMeta = TIMBRE_COLOR_META[color];
+          const imageForColor = getStampImageForColor(stamp, color);
+          const isSelected = color === initialColor;
+
+          return (
+            <button
+              type="button"
+              class={`color-chip ${isSelected ? "is-selected" : ""}`}
+              style={`--chip-color: ${colorMeta.hex};`}
+              data-stamp-color
+              data-color={color}
+              data-image={imageForColor}
+              aria-label={colorMeta.label}
+              aria-pressed={isSelected ? "true" : "false"}
+              title={colorMeta.label}
+            ></button>
+          );
+        })}
+      </div>
+    </fieldset>
+
+    <section class="stamp-detail__specifications" aria-labelledby="stamp-specifications-heading">
+      <h2 id="stamp-specifications-heading">Especificaciones</h2>
+      <dl>
+        <div>
+          <dt>Ancho</dt>
+          <dd>{stamp.sizeMm.width} mm</dd>
+        </div>
+        <div>
+          <dt>Alto</dt>
+          <dd>{stamp.sizeMm.height} mm</dd>
+        </div>
+      </dl>
+    </section>
   </div>
 </article>
 
@@ -68,21 +88,25 @@ const initialImage = getStampImageForColor(stamp, initialColor);
 <style>
   .stamp-detail {
     display: grid;
-    gap: 20px;
+    gap: clamp(24px, 4vw, 56px);
   }
 
   .stamp-detail__media-wrap {
-    background: #f8fafc;
+    align-items: center;
+    background: #fff;
     border: 1px solid #d9e2ec;
-    border-radius: 12px;
-    padding: 12px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+    padding: 0;
   }
 
   .stamp-detail__media {
     aspect-ratio: 4 / 3;
-    border-radius: 10px;
     display: block;
-    object-fit: cover;
+    max-height: 560px;
+    object-fit: contain;
     transition: opacity 180ms ease;
     width: 100%;
   }
@@ -92,51 +116,130 @@ const initialImage = getStampImageForColor(stamp, initialColor);
   }
 
   .stamp-detail__content {
+    align-content: start;
     display: grid;
-    gap: 10px;
+    gap: 28px;
+    min-width: 0;
+  }
+
+  .stamp-detail__introduction {
+    display: grid;
+    gap: 12px;
+  }
+
+  .stamp-detail__eyebrow {
+    color: #627d98;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .stamp-detail h1 {
+    color: #102a43;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.05;
+  }
+
+  .stamp-detail__description {
+    color: #486581;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 62ch;
+  }
+
+  .stamp-detail__color-selector {
+    border: 0;
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .stamp-detail__color-selector legend {
+    color: #102a43;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    padding: 0;
   }
 
   .stamp-detail__colors {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
   }
 
   .color-chip {
-    align-items: center;
-    background: #fff;
-    border: 1px solid #cbd5e1;
-    border-radius: 999px;
+    background: var(--chip-color);
+    border: 1px solid #9fb3c8;
+    border-radius: 50%;
+    box-sizing: border-box;
     cursor: pointer;
-    display: inline-flex;
-    gap: 8px;
-    padding: 6px 10px;
+    flex: 0 0 28px;
+    height: 28px;
+    padding: 0;
     transition: border-color 120ms ease, box-shadow 120ms ease;
+    width: 28px;
   }
 
   .color-chip.is-selected {
-    border-color: #0ea5e9;
-    box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+    border-color: #0b7285;
+    box-shadow: 0 0 0 2px rgba(11, 114, 133, 0.18);
   }
 
   .color-chip:focus-visible {
-    outline: 2px solid #0ea5e9;
+    outline: 2px solid #0b7285;
     outline-offset: 2px;
   }
 
-  .color-chip__swatch {
-    background: var(--chip-color);
-    border: 1px solid #cbd5e1;
-    border-radius: 50%;
-    display: inline-block;
-    height: 14px;
-    width: 14px;
+  .stamp-detail__specifications {
+    border-top: 1px solid #d9e2ec;
+    display: grid;
+    gap: 14px;
+    padding-top: 24px;
   }
 
-  @media (min-width: 1024px) {
+  .stamp-detail__specifications h2 {
+    color: #102a43;
+    font-size: 1.15rem;
+  }
+
+  .stamp-detail__specifications dl {
+    display: grid;
+    gap: 0;
+    margin: 0;
+  }
+
+  .stamp-detail__specifications dl > div {
+    align-items: baseline;
+    border-bottom: 1px solid #e6edf3;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 12px 0;
+  }
+
+  .stamp-detail__specifications dt {
+    color: #627d98;
+  }
+
+  .stamp-detail__specifications dd {
+    color: #102a43;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
     .stamp-detail {
       align-items: start;
-      grid-template-columns: 1.25fr 1fr;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+
+    .stamp-detail__media-wrap {
+      position: sticky;
+      top: 24px;
     }
   }
 </style>

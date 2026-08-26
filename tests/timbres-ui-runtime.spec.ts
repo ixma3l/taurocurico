@@ -3,12 +3,21 @@ import { describe, expect, it } from "vitest";
 import { initStampDetail } from "../src/components/timbres/stamp-detail";
 import stampGridSource from "../src/components/timbres/StampGrid.astro?raw";
 import stampCardSource from "../src/components/timbres/StampCard.astro?raw";
+import stampDetailSource from "../src/components/timbres/StampDetail.astro?raw";
+import familyPageSource from "../src/pages/timbres/[brand]/[family].astro?raw";
 import detailPageSource from "../src/pages/timbres/[brand]/[family]/[stamp].astro?raw";
 
 describe("timbres UI contract evidence", () => {
-  it("keeps 3-up desktop grid and simplified stamp card", () => {
+  it("keeps a 3-up default grid and supports an opt-in 4-up desktop grid", () => {
+    expect(stampGridSource).toContain("grid-template-columns: 1fr;");
+    expect(stampGridSource).toContain("@media (min-width: 640px)");
+    expect(stampGridSource).toContain("grid-template-columns: repeat(2, minmax(0, 1fr));");
     expect(stampGridSource).toContain("@media (min-width: 1024px)");
+    expect(stampGridSource).toContain("desktopColumns = 3");
+    expect(stampGridSource).toContain('"stamp-grid--four-columns": desktopColumns === 4');
     expect(stampGridSource).toContain("grid-template-columns: repeat(3, minmax(0, 1fr));");
+    expect(stampGridSource).toContain("grid-template-columns: repeat(4, minmax(0, 1fr));");
+    expect(familyPageSource).toContain("<StampGrid stamps={family.stamps} />");
 
     expect(stampCardSource).toContain("/timbres/${stamp.brandSlug}/${stamp.familySlug}/${stamp.slug}");
     expect(stampCardSource).toContain("<img");
@@ -18,10 +27,60 @@ describe("timbres UI contract evidence", () => {
     expect(stampCardSource).not.toContain("stamp.colors");
   });
 
-  it("keeps stamp detail route generation and not-found redirect", () => {
+  it("renders a responsive, accessible product-detail hierarchy", () => {
+    expect(stampDetailSource).toContain("data-stamp-detail");
+    expect(stampDetailSource).toContain("data-stamp-image");
+    expect(stampDetailSource).toContain("data-stamp-color");
+    expect(stampDetailSource).toContain("data-color={color}");
+    expect(stampDetailSource).toContain("data-image={imageForColor}");
+    expect(stampDetailSource).toContain('aria-pressed={isSelected ? "true" : "false"}');
+    expect(stampDetailSource).toContain("is-selected");
+    expect(stampDetailSource).toContain("is-swapping");
+    expect(stampDetailSource).toContain("<h1>{stamp.modelName}</h1>");
+    expect(stampDetailSource).toContain("<fieldset");
+    expect(stampDetailSource).toContain("<legend>Colores disponibles</legend>");
+    expect(stampDetailSource).toContain(">Especificaciones</h2>");
+    expect(stampDetailSource).toContain("stamp.sizeMm.width");
+    expect(stampDetailSource).toContain("stamp.sizeMm.height");
+    expect(stampDetailSource).toContain("object-fit: contain;");
+    expect(stampDetailSource).toContain("@media (min-width: 768px)");
+    expect(stampDetailSource).toContain("grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);");
+  });
+
+  it("renders color-only 28px circular controls with accessible names", () => {
+    const colorChipStyles = stampDetailSource.match(/\.color-chip \{([\s\S]*?)\n  \}/)?.[1] ?? "";
+
+    expect(stampDetailSource).toContain('type="button"');
+    expect(stampDetailSource).toContain("aria-label={colorMeta.label}");
+    expect(stampDetailSource).toContain("title={colorMeta.label}");
+    expect(stampDetailSource).not.toContain("<span>{colorMeta.label}</span>");
+    expect(colorChipStyles).toContain("background: var(--chip-color);");
+    expect(colorChipStyles).toContain("border-radius: 50%;");
+    expect(colorChipStyles).toContain("height: 28px;");
+    expect(colorChipStyles).toContain("width: 28px;");
+  });
+
+  it("keeps route generation and adds named breadcrumbs and related models", () => {
     expect(detailPageSource).toContain("export const getStaticPaths = () =>");
     expect(detailPageSource).toContain("getStampStaticParams()");
     expect(detailPageSource).toContain('return Astro.redirect("/404")');
+    expect(detailPageSource).toContain("getBrandBySlug");
+    expect(detailPageSource).toContain("getFamilyBySlugs");
+    expect(detailPageSource).toContain("{brand.name}");
+    expect(detailPageSource).toContain("{family.name}");
+    expect(detailPageSource).toContain("{stamp.modelName}");
+    expect(detailPageSource).toContain("family.stamps.filter");
+    expect(detailPageSource).toContain(".slice(0, 4)");
+    expect(detailPageSource).toContain("relatedStamps.length > 0");
+    expect(detailPageSource).toContain("<StampGrid stamps={relatedStamps} desktopColumns={4} />");
+  });
+
+  it("does not add unsupported ecommerce or gallery features", () => {
+    const productDetailSources = `${stampDetailSource}\n${detailPageSource}`;
+
+    expect(productDetailSources).not.toMatch(
+      /price|precio|stock|cart|carrito|wishlist|review|reseña|bootstrap|font-awesome|fontawesome|googleapis|thumbnail|miniatura|zoom/i,
+    );
   });
 });
 

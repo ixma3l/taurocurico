@@ -2,10 +2,15 @@
 import type { TimbreStamp } from "@/data/timbres-data";
 import StampCard from "@/components/timbres/StampCard.astro";
 
-const { stamps } = Astro.props as { stamps: TimbreStamp[] };
+interface Props {
+  stamps: TimbreStamp[];
+  desktopColumns?: 3 | 4;
+}
+
+const { stamps, desktopColumns = 3 } = Astro.props;
 ---
 
-<ul class="stamp-grid">
+<ul class:list={["stamp-grid", { "stamp-grid--four-columns": desktopColumns === 4 }]}>
   {stamps.map((stamp) => (
     <li>
       <StampCard stamp={stamp} />
@@ -31,6 +36,10 @@ const { stamps } = Astro.props as { stamps: TimbreStamp[] };
   @media (min-width: 1024px) {
     .stamp-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .stamp-grid--four-columns {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 </style>

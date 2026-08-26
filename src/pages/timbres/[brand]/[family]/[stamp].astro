@@ -1,6 +1,9 @@
 ---
 import StampDetail from "@/components/timbres/StampDetail.astro";
+import StampGrid from "@/components/timbres/StampGrid.astro";
 import {
+  getBrandBySlug,
+  getFamilyBySlugs,
   getStampBySlugs,
   getStampStaticParams,
 } from "@/data/timbres-data";
@@ -17,26 +20,105 @@ export const getStaticPaths = () =>
   }));
 
 const { brandSlug, familySlug, stampSlug } = Astro.props;
+const brand = brandSlug ? getBrandBySlug(brandSlug) : undefined;
+const family = brandSlug && familySlug ? getFamilyBySlugs(brandSlug, familySlug) : undefined;
 const stamp =
   brandSlug && familySlug && stampSlug
     ? getStampBySlugs(brandSlug, familySlug, stampSlug)
     : undefined;
 
-if (!stamp) {
+if (!brand || !family || !stamp) {
   return Astro.redirect("/404");
 }
+
+const relatedStamps = family.stamps.filter((candidate) => candidate.slug !== stamp.slug).slice(0, 4);
 ---
 
 <Layout title={`Timbre ${stamp.modelName}`}>
-  <section class="container timbre-detail-page">
-    <a href={`/timbres/${stamp.brandSlug}/${stamp.familySlug}`}>← Volver a {stamp.familySlug}</a>
+  <div class="container timbre-detail-page">
+    <header class="timbre-detail-page__header">
+      <nav aria-label="Ruta de navegación">
+        <ol>
+          <li><a href="/timbres">Timbres</a></li>
+          <li><a href={`/timbres/${brand.slug}`}>{brand.name}</a></li>
+          <li><a href={`/timbres/${brand.slug}/${family.slug}`}>{family.name}</a></li>
+          <li><span aria-current="page">{stamp.modelName}</span></li>
+        </ol>
+      </nav>
+    </header>
+
     <StampDetail stamp={stamp} />
-  </section>
+
+    {
+      relatedStamps.length > 0 && (
+        <section class="timbre-detail-page__related" aria-labelledby="related-stamps-heading">
+          <h2 id="related-stamps-heading">Productos relacionados</h2>
+          <StampGrid stamps={relatedStamps} desktopColumns={4} />
+        </section>
+      )
+    }
+  </div>
 </Layout>
 
 <style>
   .timbre-detail-page {
     display: grid;
-    gap: 14px;
+    gap: clamp(28px, 5vw, 64px);
+  }
+
+  .timbre-detail-page__header {
+    background: #f8fafc;
+    border-bottom: 1px solid #e6edf3;
+    padding: 14px 18px;
+  }
+
+  .timbre-detail-page__header ol {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .timbre-detail-page__header li {
+    align-items: center;
+    color: #627d98;
+    display: inline-flex;
+    font-size: 0.9rem;
+    gap: 8px;
+  }
+
+  .timbre-detail-page__header li:not(:last-child)::after {
+    color: #9fb3c8;
+    content: "/";
+  }
+
+  .timbre-detail-page__header a {
+    color: #486581;
+    text-decoration: none;
+  }
+
+  .timbre-detail-page__header a:hover {
+    color: #0b7285;
+    text-decoration: underline;
+  }
+
+  .timbre-detail-page__header [aria-current="page"] {
+    color: #243b53;
+    font-weight: 700;
+  }
+
+  .timbre-detail-page__related {
+    border-top: 1px solid #d9e2ec;
+    display: grid;
+    gap: 20px;
+    padding-top: clamp(28px, 5vw, 48px);
+  }
+
+  .timbre-detail-page__related h2 {
+    color: #102a43;
+    font-size: clamp(1.5rem, 3vw, 2rem);
   }
 </style>
