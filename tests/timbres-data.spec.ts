@@ -2,14 +2,19 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildTimbresMenuTree,
+  getAvailableColors,
+  getAvailableStamps,
   getBrandStaticParams,
   getBrands,
   getFamilyBySlugs,
   getFamilyStaticParams,
+  getInitialStampColor,
   getStampBySlugs,
   getStampImageForColor,
   getStampStaticParams,
   timbresCatalog,
+  validateTimbresCatalog,
+  type TimbresCatalog,
 } from "../src/data/timbres-data";
 
 describe("timbres catalog selectors", () => {
@@ -49,16 +54,67 @@ describe("timbres catalog integrity", () => {
           expect(stamp.description.length).toBeGreaterThan(0);
           expect(stamp.sizeMm.width).toBeGreaterThan(0);
           expect(stamp.sizeMm.height).toBeGreaterThan(0);
+          expect(typeof stamp.active).toBe("boolean");
           expect(stamp.colors.length).toBeGreaterThan(0);
           expect(stamp.images.default.length).toBeGreaterThan(0);
 
+          const colorCodes = stamp.colors.map((color) => color.code);
+          expect(new Set(colorCodes).size).toBe(colorCodes.length);
+          for (const color of stamp.colors) {
+            expect(typeof color.code).toBe("string");
+            expect(typeof color.available).toBe("boolean");
+          }
+
           for (const colorKey of Object.keys(stamp.images.byColor)) {
-            expect(stamp.colors).toContain(colorKey);
+            expect(colorCodes).toContain(colorKey);
             expect(stamp.images.byColor[colorKey as keyof typeof stamp.images.byColor]).toBeTruthy();
           }
         }
       }
     }
+  });
+
+  it("rejects invalid/duplicate color codes and non-boolean availability", () => {
+    const baseStamp = timbresCatalog.brands[0].families[0].stamps[0];
+    const makeCatalog = (colors: unknown[]): TimbresCatalog => ({
+      brands: [
+        {
+          slug: "test-brand",
+          name: "Test Brand",
+          families: [
+            {
+              slug: "test-family",
+              name: "Test Family",
+              brandSlug: "test-brand",
+              stamps: [
+                {
+                  ...baseStamp,
+                  slug: "test-stamp",
+                  brandSlug: "test-brand",
+                  familySlug: "test-family",
+                  colors,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    } as TimbresCatalog);
+
+    expect(() =>
+      validateTimbresCatalog(
+        makeCatalog([
+          { code: "negro", available: true },
+          { code: "negro", available: false },
+        ]),
+      ),
+    ).toThrow(/duplicate color/i);
+    expect(() =>
+      validateTimbresCatalog(makeCatalog([{ code: "negro", available: "yes" }])),
+    ).toThrow(/availability.*boolean/i);
+    expect(() =>
+      validateTimbresCatalog(makeCatalog([{ code: "violeta", available: true }])),
+    ).toThrow(/unknown color code/i);
   });
 });
 
@@ -78,11 +134,28 @@ describe("timbres static route params", () => {
     ).toEqual(familyPairsFromCatalog);
   });
 
-  it("derives stamp static params from catalog", () => {
+  it("returns no available models for a family whose stamps are all inactive", () => {
+    const printy = getFamilyBySlugs("trodat", "printy");
+    expect(printy).toBeDefined();
+    if (!printy) {
+      return;
+    }
+
+    const inactiveFamily = {
+      ...printy,
+      stamps: printy.stamps.filter((stamp) => !stamp.active),
+    };
+    expect(inactiveFamily.stamps.length).toBeGreaterThan(0);
+    expect(getAvailableStamps(inactiveFamily)).toEqual([]);
+  });
+
+  it("derives stamp static params only from active catalog stamps", () => {
     const stampParams = getStampStaticParams();
     const stampTriplesFromCatalog = timbresCatalog.brands.flatMap((brand) =>
       brand.families.flatMap((family) =>
-        family.stamps.map((stamp) => `${brand.slug}/${family.slug}/${stamp.slug}`),
+        getAvailableStamps(family).map(
+          (stamp) => `${brand.slug}/${family.slug}/${stamp.slug}`,
+        ),
       ),
     );
 
@@ -106,9 +179,67 @@ describe("timbres stamp lookup and image resolution", () => {
     expect(stamp?.brandSlug).toBe("trodat");
     expect(stamp?.familySlug).toBe("printy");
 
+    expect(getStampBySlugs("trodat", "printy", "4612")).toBeUndefined();
+    expect(getStampBySlugs("trodat", "printy", "46019")).toBeUndefined();
+    expect(getStampBySlugs("trodat", "printy", "46025")).toBeUndefined();
     expect(getStampBySlugs("trodat", "printy", "does-not-exist")).toBeUndefined();
     expect(getStampBySlugs("trodat", "does-not-exist", "4911")).toBeUndefined();
     expect(getStampBySlugs("does-not-exist", "printy", "4911")).toBeUndefined();
+  });
+
+  it("keeps unavailable color image URLs but selects only available colors", () => {
+    const stamp = timbresCatalog.brands
+      .find((brand) => brand.slug === "trodat")
+      ?.families.find((family) => family.slug === "printy")
+      ?.stamps.find((candidate) => candidate.slug === "4630");
+
+    expect(stamp).toBeDefined();
+    if (!stamp) {
+      return;
+    }
+
+    expect(stamp.colors).toEqual([
+      { code: "negro", available: false },
+      { code: "rojo", available: true },
+      { code: "azul", available: false },
+    ]);
+    expect(getAvailableColors(stamp).map((color) => color.code)).toEqual(["rojo"]);
+    expect(getInitialStampColor(stamp)).toBe("rojo");
+    expect(getStampImageForColor(stamp, getInitialStampColor(stamp))).toBe(
+      stamp.images.byColor.rojo,
+    );
+    expect(stamp.images.byColor.rojo).toBeTruthy();
+    expect(stamp.images.byColor.azul).toBeTruthy();
+  });
+
+  it("keeps color availability independent across duplicate model slugs", () => {
+    const printyStamp = getStampBySlugs("trodat", "printy", "4630");
+    const redondosStamp = getStampBySlugs("trodat", "redondos", "4630");
+
+    expect(printyStamp).toBeDefined();
+    expect(redondosStamp).toBeDefined();
+    expect(printyStamp?.familySlug).toBe("printy");
+    expect(redondosStamp?.familySlug).toBe("redondos");
+    expect(redondosStamp?.colors).not.toBe(printyStamp?.colors);
+  });
+
+  it("falls back to the default image when no color is available", () => {
+    const stamp = getStampBySlugs("trodat", "printy", "4911");
+    expect(stamp).toBeDefined();
+    if (!stamp) {
+      return;
+    }
+
+    const unavailableColorsStamp = {
+      ...stamp,
+      colors: stamp.colors.map((color) => ({ ...color, available: false })),
+    };
+
+    expect(getAvailableColors(unavailableColorsStamp)).toEqual([]);
+    expect(getInitialStampColor(unavailableColorsStamp)).toBeUndefined();
+    expect(getStampImageForColor(unavailableColorsStamp, undefined)).toBe(
+      unavailableColorsStamp.images.default,
+    );
   });
 
   it("returns color variant image when available and fallback default otherwise", () => {

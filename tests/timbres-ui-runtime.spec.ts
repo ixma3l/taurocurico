@@ -4,6 +4,7 @@ import { initStampDetail } from "../src/components/timbres/stamp-detail";
 import stampGridSource from "../src/components/timbres/StampGrid.astro?raw";
 import stampCardSource from "../src/components/timbres/StampCard.astro?raw";
 import stampDetailSource from "../src/components/timbres/StampDetail.astro?raw";
+import familyCardSource from "../src/components/timbres/FamilyCard.astro?raw";
 import familyPageSource from "../src/pages/timbres/[brand]/[family].astro?raw";
 import detailPageSource from "../src/pages/timbres/[brand]/[family]/[stamp].astro?raw";
 
@@ -17,7 +18,11 @@ describe("timbres UI contract evidence", () => {
     expect(stampGridSource).toContain('"stamp-grid--four-columns": desktopColumns === 4');
     expect(stampGridSource).toContain("grid-template-columns: repeat(3, minmax(0, 1fr));");
     expect(stampGridSource).toContain("grid-template-columns: repeat(4, minmax(0, 1fr));");
-    expect(familyPageSource).toContain("<StampGrid stamps={family.stamps} />");
+    expect(familyPageSource).toContain("<StampGrid stamps={availableStamps} />");
+    expect(familyPageSource).toContain("getAvailableStamps(family)");
+    expect(familyPageSource).toContain("availableStamps.length > 0");
+    expect(familyPageSource).toContain("No hay modelos publicados en esta familia todavía.");
+    expect(familyCardSource).toContain("getAvailableStamps(family).length");
 
     expect(stampCardSource).toContain("/timbres/${stamp.brandSlug}/${stamp.familySlug}/${stamp.slug}");
     expect(stampCardSource).toContain("<img");
@@ -31,14 +36,20 @@ describe("timbres UI contract evidence", () => {
     expect(stampDetailSource).toContain("data-stamp-detail");
     expect(stampDetailSource).toContain("data-stamp-image");
     expect(stampDetailSource).toContain("data-stamp-color");
-    expect(stampDetailSource).toContain("data-color={color}");
+    expect(stampDetailSource).toContain("getInitialStampColor(stamp)");
+    expect(stampDetailSource).toContain("const initialColor = getInitialStampColor(stamp)");
+    expect(stampDetailSource).not.toContain("stamp.colors[0]");
+    expect(stampDetailSource).toContain("stamp.colors.map");
+    expect(stampDetailSource).not.toContain("availableColors.map");
+    expect(stampDetailSource).toContain("data-color={color.code}");
+    expect(stampDetailSource).toContain("No hay colores disponibles para este modelo.");
     expect(stampDetailSource).toContain("data-image={imageForColor}");
     expect(stampDetailSource).toContain('aria-pressed={isSelected ? "true" : "false"}');
     expect(stampDetailSource).toContain("is-selected");
     expect(stampDetailSource).toContain("is-swapping");
     expect(stampDetailSource).toContain("<h1>{stamp.modelName}</h1>");
     expect(stampDetailSource).toContain("<fieldset");
-    expect(stampDetailSource).toContain("<legend>Colores disponibles</legend>");
+    expect(stampDetailSource).toContain("<legend>Colores</legend>");
     expect(stampDetailSource).toContain(">Especificaciones</h2>");
     expect(stampDetailSource).toContain("stamp.sizeMm.width");
     expect(stampDetailSource).toContain("stamp.sizeMm.height");
@@ -47,17 +58,35 @@ describe("timbres UI contract evidence", () => {
     expect(stampDetailSource).toContain("grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);");
   });
 
-  it("renders color-only 28px circular controls with accessible names", () => {
+  it("renders every color as a 28px accessible chip and marks unavailable colors", () => {
     const colorChipStyles = stampDetailSource.match(/\.color-chip \{([\s\S]*?)\n  \}/)?.[1] ?? "";
+    const unavailableStyles =
+      stampDetailSource.match(/\.color-chip\.is-unavailable \{([\s\S]*?)\n  \}/)?.[1] ?? "";
 
-    expect(stampDetailSource).toContain('type="button"');
-    expect(stampDetailSource).toContain("aria-label={colorMeta.label}");
-    expect(stampDetailSource).toContain("title={colorMeta.label}");
+    expect(stampDetailSource).toContain("stamp.colors.map");
+    expect(stampDetailSource).toContain("const isUnavailable = !color.available;");
+    expect(stampDetailSource).toContain('isUnavailable ? "is-unavailable" : ""');
+    expect(stampDetailSource).toContain("disabled={isUnavailable}");
+    expect(stampDetailSource).toContain('`${colorMeta.label}, sin stock`');
+    expect(stampDetailSource).toContain("aria-label={accessibleLabel}");
+    expect(stampDetailSource).toContain("title={accessibleLabel}");
     expect(stampDetailSource).not.toContain("<span>{colorMeta.label}</span>");
     expect(colorChipStyles).toContain("background: var(--chip-color);");
     expect(colorChipStyles).toContain("border-radius: 50%;");
     expect(colorChipStyles).toContain("height: 28px;");
     expect(colorChipStyles).toContain("width: 28px;");
+    expect(unavailableStyles).toContain("cursor: not-allowed;");
+    expect(unavailableStyles).toContain("opacity: 0.5;");
+  });
+
+  it("keeps all chips visible and announces when no color is available", () => {
+    expect(stampDetailSource).toContain(
+      "const hasAvailableColors = stamp.colors.some((color) => color.available);",
+    );
+    expect(stampDetailSource).toContain("{stamp.colors.map");
+    expect(stampDetailSource).toContain("!hasAvailableColors");
+    expect(stampDetailSource).toContain('class="stamp-detail__color-empty" role="status"');
+    expect(stampDetailSource).toContain("No hay colores disponibles para este modelo.");
   });
 
   it("keeps route generation and adds named breadcrumbs and related models", () => {
@@ -69,7 +98,8 @@ describe("timbres UI contract evidence", () => {
     expect(detailPageSource).toContain("{brand.name}");
     expect(detailPageSource).toContain("{family.name}");
     expect(detailPageSource).toContain("{stamp.modelName}");
-    expect(detailPageSource).toContain("family.stamps.filter");
+    expect(detailPageSource).toContain("getAvailableStamps(family)");
+    expect(detailPageSource).not.toContain("family.stamps.filter");
     expect(detailPageSource).toContain(".slice(0, 4)");
     expect(detailPageSource).toContain("relatedStamps.length > 0");
     expect(detailPageSource).toContain("<StampGrid stamps={relatedStamps} desktopColumns={4} />");
@@ -79,7 +109,7 @@ describe("timbres UI contract evidence", () => {
     const productDetailSources = `${stampDetailSource}\n${detailPageSource}`;
 
     expect(productDetailSources).not.toMatch(
-      /price|precio|stock|cart|carrito|wishlist|review|reseña|bootstrap|font-awesome|fontawesome|googleapis|thumbnail|miniatura|zoom/i,
+      /price|precio|cart|carrito|wishlist|review|reseña|bootstrap|font-awesome|fontawesome|googleapis|thumbnail|miniatura|zoom/i,
     );
   });
 });

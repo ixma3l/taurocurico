@@ -1,12 +1,14 @@
 ---
 import {
+  getInitialStampColor,
   getStampImageForColor,
   TIMBRE_COLOR_META,
   type TimbreStamp,
 } from "@/data/timbres-data";
 
 const { stamp } = Astro.props as { stamp: TimbreStamp };
-const initialColor = stamp.colors[0];
+const hasAvailableColors = stamp.colors.some((color) => color.available);
+const initialColor = getInitialStampColor(stamp);
 const initialImage = getStampImageForColor(stamp, initialColor);
 ---
 
@@ -31,29 +33,42 @@ const initialImage = getStampImageForColor(stamp, initialColor);
     </div>
 
     <fieldset class="stamp-detail__color-selector">
-      <legend>Colores disponibles</legend>
+      <legend>Colores</legend>
       <div class="stamp-detail__colors">
         {stamp.colors.map((color) => {
-          const colorMeta = TIMBRE_COLOR_META[color];
-          const imageForColor = getStampImageForColor(stamp, color);
-          const isSelected = color === initialColor;
+          const colorMeta = TIMBRE_COLOR_META[color.code];
+          const imageForColor = getStampImageForColor(stamp, color.code);
+          const isSelected = color.code === initialColor;
+          const isUnavailable = !color.available;
+          const accessibleLabel = isUnavailable
+            ? `${colorMeta.label}, sin stock`
+            : colorMeta.label;
 
           return (
             <button
               type="button"
-              class={`color-chip ${isSelected ? "is-selected" : ""}`}
+              class={`color-chip ${isSelected ? "is-selected" : ""} ${isUnavailable ? "is-unavailable" : ""}`}
               style={`--chip-color: ${colorMeta.hex};`}
               data-stamp-color
-              data-color={color}
+              data-color={color.code}
               data-image={imageForColor}
-              aria-label={colorMeta.label}
+              aria-label={accessibleLabel}
               aria-pressed={isSelected ? "true" : "false"}
-              title={colorMeta.label}
+              title={accessibleLabel}
+              disabled={isUnavailable}
             ></button>
           );
         })}
       </div>
     </fieldset>
+
+    {
+      !hasAvailableColors && (
+        <p class="stamp-detail__color-empty" role="status">
+          No hay colores disponibles para este modelo.
+        </p>
+      )
+    }
 
     <section class="stamp-detail__specifications" aria-labelledby="stamp-specifications-heading">
       <h2 id="stamp-specifications-heading">Especificaciones</h2>
@@ -148,6 +163,11 @@ const initialImage = getStampImageForColor(stamp, initialColor);
     max-width: 62ch;
   }
 
+  .stamp-detail__color-empty {
+    color: #486581;
+    margin: 0;
+  }
+
   .stamp-detail__color-selector {
     border: 0;
     display: grid;
@@ -187,6 +207,11 @@ const initialImage = getStampImageForColor(stamp, initialColor);
   .color-chip.is-selected {
     border-color: #0b7285;
     box-shadow: 0 0 0 2px rgba(11, 114, 133, 0.18);
+  }
+
+  .color-chip.is-unavailable {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   .color-chip:focus-visible {

@@ -8,6 +8,11 @@ export type TimbreColorCode =
   | "fucsia"
   | "turquesa";
 
+export interface TimbreColorAvailability {
+  code: TimbreColorCode;
+  available: boolean;
+}
+
 export interface TimbreStamp {
   slug: string;
   modelName: string;
@@ -19,7 +24,7 @@ export interface TimbreStamp {
     height: number;
   };
   description: string;
-  colors: TimbreColorCode[];
+  colors: TimbreColorAvailability[];
   images: TimbreStampImages;
 }
 
@@ -50,7 +55,8 @@ export interface TimbresCatalog {
  * 1) `brand.slug` y `family.slug` definen la URL canónica `/timbres/{brand}/{family}`.
  * 2) Cada familia DEBE pertenecer al brand contenedor (`family.brandSlug === brand.slug`).
  * 3) Cada timbre DEBE quedar anclado a una única familia (`stamp.brandSlug/familySlug`).
- * 4) `stamp.colors` es la ÚNICA fuente de colores disponibles por modelo.
+ * 4) `stamp.colors` declara todos los colores y su disponibilidad por modelo.
+ * 5) Las variantes de `images.byColor` se conservan aunque el color no esté disponible.
  */
 
 export interface MenuNode {
@@ -122,10 +128,12 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4612",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 12, height: 12 },
               description: "Timbre automático redondo para marcaciones pequeñas.",
-              colors: ["negro"],
+              colors: [
+                { code: "negro", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4612/trodat-4612-printy.webp",
                 byColor: {},
@@ -136,10 +144,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 46019",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 19, height: 19 },
               description: "Timbre automático redondo para sellos compactos.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/46019/trodat-46019-printy.webp",
                 byColor: {
@@ -153,10 +165,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 46025",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 25, height: 25 },
               description: "Timbre automático redondo para diseños circulares compactos.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/46025/trodat-46025-printy.webp",
                 byColor: {
@@ -173,9 +189,13 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 30, height: 30 },
               description: "Timbre automático redondo para logos y marcaciones circulares.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: false },
+                { code: "rojo", available: true },
+                { code: "azul", available: false },
+              ],
               images: {
-                default: "../../src/assets/images/uploads/timbres/4630/trodat-4630-printy.webp",
+                default: "../../src/assets/images/uploads/timbres/4630/trodat-4630-printy-01.webp",
                 byColor: {
                   rojo: "../../src/assets/images/uploads/timbres/4630/trodat-4630-printy-01.webp",
                   azul: "../../src/assets/images/uploads/timbres/4630/trodat-4630-printy-02.webp",
@@ -187,10 +207,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4638",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 38, height: 38 },
               description: "Timbre automático redondo para diseños circulares de tamaño medio.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4638/trodat-4638-printy.webp",
                 byColor: {
@@ -207,9 +231,13 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 42, height: 42 },
               description: "Timbre automático redondo para logos, insignias o sellos destacados.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: false },
+                { code: "rojo", available: true },
+                { code: "azul", available: false },
+              ],
               images: {
-                default: "../../src/assets/images/uploads/timbres/4642/trodat-4642-printy.webp",
+                default: "../../src/assets/images/uploads/timbres/4642/trodat-4642-printy-01.webp",
                 byColor: {
                   rojo: "../../src/assets/images/uploads/timbres/4642/trodat-4642-printy-01.webp",
                   azul: "../../src/assets/images/uploads/timbres/4642/trodat-4642-printy-02.webp",
@@ -224,12 +252,17 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 45, height: 45 },
               description: "Timbre automático redondo grande para diseños con mayor presencia.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: false },
+                { code: "rojo", available: true },
+                { code: "azul", available: false },
+              ],
               images: {
-                default: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy.webp",
+                default: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy-01.webp",
                 byColor: {
                   rojo: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy-01.webp",
-                  azul: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy-02.webp",
+                  azul: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy-01.webp",
+                  negro: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy.webp",
                 },
               },
             },
@@ -238,10 +271,12 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 46050",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 50, height: 50 },
               description: "Timbre automático redondo de gran formato para sellos destacados.",
-              colors: ["negro"],
+              colors: [
+                { code: "negro", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/46050/trodat-46050-printy.webp",
                 byColor: {},
@@ -252,10 +287,12 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4907",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 13, height: 6 },
               description: "Timbre automático mini para marcaciones muy pequeñas.",
-              colors: ["negro"],
+              colors: [
+                { code: "negro", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4907/trodat-4907-printy.webp",
                 byColor: {},
@@ -266,10 +303,13 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4908",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 15, height: 7 },
               description: "Timbre automático pequeño para textos breves y marcaciones compactas.",
-              colors: ["negro", "rojo"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4908/trodat-4908-printy.webp",
                 byColor: {
@@ -282,10 +322,18 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4910",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 26, height: 9 },
               description: "Timbre automático compacto para textos cortos y marcaciones pequeñas.",
-              colors: ["negro", "rojo", "azul", "verde", "gris", "blanco", "fucsia"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+                { code: "verde", available: true },
+                { code: "gris", available: true },
+                { code: "blanco", available: true },
+                { code: "fucsia", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4910/trodat-4910-printy.webp",
                 byColor: {
@@ -306,7 +354,15 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 38, height: 14 },
               description: "Timbre automático compacto para uso diario.",
-              colors: ["negro", "rojo", "azul", "verde", "gris", "blanco", "fucsia"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: false },
+                { code: "azul", available: false },
+                { code: "verde", available: false },
+                { code: "gris", available: false },
+                { code: "blanco", available: false },
+                { code: "fucsia", available: false },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4911/trodat-4911-printy.webp",
                 byColor: {
@@ -327,7 +383,15 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 47, height: 18 },
               description: "Modelo horizontal para textos un poco más extensos.",
-              colors: ["negro", "rojo", "azul", "verde", "gris", "blanco", "fucsia"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: false },
+                { code: "azul", available: false },
+                { code: "verde", available: true },
+                { code: "gris", available: false },
+                { code: "blanco", available: false },
+                { code: "fucsia", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4912/trodat-4912-printy.webp",
                 byColor: {
@@ -348,7 +412,15 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 58, height: 22 },
               description: "Modelo horizontal para textos un poco más extensos.",
-              colors: ["negro", "rojo", "azul", "verde", "gris", "blanco", "fucsia"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: false },
+                { code: "azul", available: false },
+                { code: "verde", available: false },
+                { code: "gris", available: false },
+                { code: "blanco", available: false },
+                { code: "fucsia", available: false },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4913/trodat-4913-printy.webp",
                 byColor: {
@@ -366,10 +438,18 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4914",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 64, height: 26 },
               description: "Timbre automático de mayor formato para textos amplios o datos comerciales.",
-              colors: ["negro", "rojo", "azul", "verde", "gris", "blanco", "fucsia"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+                { code: "verde", available: true },
+                { code: "gris", available: true },
+                { code: "blanco", available: true },
+                { code: "fucsia", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4914/trodat-4914-printy.webp",
                 byColor: {
@@ -390,7 +470,15 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 70, height: 25 },
               description: "Timbre automático rectangular para textos largos y marcaciones de oficina.",
-              colors: ["negro", "rojo", "azul", "verde", "gris", "blanco", "fucsia"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: false },
+                { code: "azul", available: false },
+                { code: "verde", available: false },
+                { code: "gris", available: false },
+                { code: "blanco", available: false },
+                { code: "fucsia", available: false },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4915/trodat-4915-printy.webp",
                 byColor: {
@@ -411,7 +499,9 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 70, height: 10 },
               description: "Timbre automático horizontal para textos largos en formato angosto.",
-              colors: ["negro"],
+              colors: [
+                { code: "negro", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4916/trodat-4916-printy.webp",
                 byColor: {
@@ -423,10 +513,12 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4917",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 50, height: 10 },
               description: "Timbre automático horizontal para textos largos en formato angosto.",
-              colors: ["negro"],
+              colors: [
+                { code: "negro", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4917/trodat-4917-printy.webp",
                 byColor: {},
@@ -440,7 +532,9 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 75, height: 15 },
               description: "Timbre automático horizontal para líneas extensas de texto.",
-              colors: ["negro"],
+              colors: [
+                { code: "negro", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4918/trodat-4918-printy.webp",
                 byColor: {},
@@ -451,10 +545,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4921",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 12, height: 12 },
               description: "Timbre automático cuadrado para iconos, códigos o marcaciones pequeñas.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4921/trodat-4921-printy.webp",
                 byColor: {
@@ -468,10 +566,12 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4922",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 20, height: 20 },
               description: "Timbre automático cuadrado para sellos compactos y marcaciones generales.",
-              colors: ["negro"],
+              colors: [
+                { code: "negro", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4922/trodat-4922-printy.webp",
                 byColor: {},
@@ -485,7 +585,11 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 30, height: 30 },
               description: "Timbre automático cuadrado para diseños de mayor presencia.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: false },
+                { code: "azul", available: false },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4923/trodat-4923-printy.webp",
                 byColor: {
@@ -502,7 +606,11 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 40, height: 40 },
               description: "Timbre automático cuadrado grande para logos o diseños destacados.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: false },
+                { code: "azul", available: false },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4924/trodat-4924-printy.webp",
                 byColor: {
@@ -516,10 +624,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4925",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 82, height: 25 },
               description: "Timbre automático de formato ancho para textos extensos.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4925/trodat-4925-printy.webp",
                 byColor: {
@@ -536,7 +648,11 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 75, height: 38 },
               description: "Timbre automático de gran formato para información comercial amplia.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: false },
+                { code: "azul", available: false },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4926/trodat-4926-printy.webp",
                 byColor: {
@@ -553,7 +669,11 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 60, height: 40 },
               description: "Timbre automático rectangular grande para datos institucionales o comerciales.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: false },
+                { code: "azul", available: false },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4927/trodat-4927-printy.webp",
                 byColor: {
@@ -570,7 +690,11 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 60, height: 33 },
               description: "Timbre automático rectangular para textos amplios y uso frecuente.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: false },
+                { code: "azul", available: false },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4928/trodat-4928-printy.webp",
                 byColor: {
@@ -584,10 +708,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4929",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 50, height: 30 },
               description: "Timbre automático rectangular para información de oficina y datos comerciales.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: false },
+                { code: "azul", available: false },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4929/trodat-4929-printy.webp",
                 byColor: {
@@ -601,10 +729,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4931",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 70, height: 30 },
               description: "Timbre automático rectangular amplio para textos de varias líneas.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4931/trodat-4931-printy.webp",
                 byColor: {
@@ -618,10 +750,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4933",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 25, height: 25 },
               description: "Timbre automático cuadrado para diseños compactos con buena visibilidad.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4933/trodat-4933-printy.webp",
                 byColor: {
@@ -635,10 +771,12 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4941",
               brandSlug: "trodat",
               familySlug: "printy",
-              active: true,
+              active: false,
               sizeMm: { width: 41, height: 24 },
               description: "Timbre automático rectangular para datos de contacto y textos de oficina.",
-              colors: ["negro"],
+              colors: [
+                { code: "negro", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4941/trodat-4941-printy.webp",
                 byColor: {},
@@ -659,7 +797,10 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 45, height: 30 },
               description: "Modelo metálico para alto volumen de uso.",
-              colors: ["negro", "rojo"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/profesional-trodat-5212.jpg",
                 byColor: {},
@@ -680,7 +821,16 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 38, height: 14 },
               description: "Timbre automático de bolsillo para traslado diario y uso portátil.",
-              colors: ["negro", "rojo", "fucsia", "turquesa", "gris", "verde", "azul", "blanco"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "fucsia", available: true },
+                { code: "turquesa", available: true },
+                { code: "gris", available: true },
+                { code: "verde", available: true },
+                { code: "azul", available: true },
+                { code: "blanco", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/9511/trodat-9511-mobile-pocket.webp",
                 byColor: {
@@ -702,7 +852,16 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 47, height: 18 },
               description: "Timbre automático de bolsillo de mayor tamaño para textos portátiles.",
-              colors: ["negro", "rojo", "fucsia", "turquesa", "gris", "verde", "azul", "blanco"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "fucsia", available: true },
+                { code: "turquesa", available: true },
+                { code: "gris", available: true },
+                { code: "verde", available: true },
+                { code: "azul", available: true },
+                { code: "blanco", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/9512/trodat-9512-mobile-pocket.webp",
                 byColor: {
@@ -728,10 +887,12 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4612",
               brandSlug: "trodat",
               familySlug: "redondos",
-              active: true,
+              active: false,
               sizeMm: { width: 12, height: 12 },
               description: "Timbre automático redondo para marcaciones pequeñas.",
-              colors: ["negro"],
+              colors: [
+                { code: "negro", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4612/trodat-4612-printy.webp",
                 byColor: {},
@@ -742,10 +903,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 46019",
               brandSlug: "trodat",
               familySlug: "redondos",
-              active: true,
+              active: false,
               sizeMm: { width: 19, height: 19 },
               description: "Timbre automático redondo para sellos compactos.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/46019/trodat-46019-printy.webp",
                 byColor: {
@@ -759,10 +924,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 46025",
               brandSlug: "trodat",
               familySlug: "redondos",
-              active: true,
+              active: false,
               sizeMm: { width: 25, height: 25 },
               description: "Timbre automático redondo para diseños circulares compactos.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/46025/trodat-46025-printy.webp",
                 byColor: {
@@ -779,12 +948,17 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 30, height: 30 },
               description: "Timbre automático redondo para logos y marcaciones circulares.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: false },
+                { code: "rojo", available: true },
+                { code: "azul", available: false },
+              ],
               images: {
-                default: "../../src/assets/images/uploads/timbres/4630/trodat-4630-printy.webp",
+                default: "../../src/assets/images/uploads/timbres/4630/trodat-4630-printy-01.webp",
                 byColor: {
                   rojo: "../../src/assets/images/uploads/timbres/4630/trodat-4630-printy-01.webp",
                   azul: "../../src/assets/images/uploads/timbres/4630/trodat-4630-printy-02.webp",
+                  negro: "../../src/assets/images/uploads/timbres/4630/trodat-4630-printy.webp",
                 },
               },
             },
@@ -793,10 +967,14 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 4638",
               brandSlug: "trodat",
               familySlug: "redondos",
-              active: true,
+              active: false,
               sizeMm: { width: 38, height: 38 },
               description: "Timbre automático redondo para diseños circulares de tamaño medio.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+                { code: "azul", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/4638/trodat-4638-printy.webp",
                 byColor: {
@@ -813,12 +991,17 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 42, height: 42 },
               description: "Timbre automático redondo para logos, insignias o sellos destacados.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: false },
+                { code: "rojo", available: true },
+                { code: "azul", available: false},
+              ],
               images: {
-                default: "../../src/assets/images/uploads/timbres/4642/trodat-4642-printy.webp",
+                default: "../../src/assets/images/uploads/timbres/4642/trodat-4642-printy-01.webp",
                 byColor: {
                   rojo: "../../src/assets/images/uploads/timbres/4642/trodat-4642-printy-01.webp",
                   azul: "../../src/assets/images/uploads/timbres/4642/trodat-4642-printy-02.webp",
+                  negro: "../../src/assets/images/uploads/timbres/4642/trodat-4642-printy.webp",
                 },
               },
             },
@@ -830,12 +1013,17 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 45, height: 45 },
               description: "Timbre automático redondo grande para diseños con mayor presencia.",
-              colors: ["negro", "rojo", "azul"],
+              colors: [
+                { code: "negro", available: false },
+                { code: "rojo", available: true },
+                { code: "azul", available: false },
+              ],
               images: {
-                default: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy.webp",
+                default: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy-01.webp",
                 byColor: {
                   rojo: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy-01.webp",
                   azul: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy-02.webp",
+                  negro: "../../src/assets/images/uploads/timbres/4645/trodat-4645-printy.webp",
                 },
               },
             },
@@ -844,10 +1032,12 @@ export const timbresCatalog: TimbresCatalog = {
               modelName: "Trodat Printy 46050",
               brandSlug: "trodat",
               familySlug: "redondos",
-              active: true,
+              active: false,
               sizeMm: { width: 50, height: 50 },
               description: "Timbre automático redondo de gran formato para sellos destacados.",
-              colors: ["negro"],
+              colors: [
+                { code: "negro", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/46050/trodat-46050-printy.webp",
                 byColor: {},
@@ -874,7 +1064,10 @@ export const timbresCatalog: TimbresCatalog = {
               active: true,
               sizeMm: { width: 38, height: 14 },
               description: "Modelo compacto de línea Imprint para uso general.",
-              colors: ["negro", "rojo"],
+              colors: [
+                { code: "negro", available: true },
+                { code: "rojo", available: true },
+              ],
               images: {
                 default: "../../src/assets/images/uploads/timbres/printy-imprint-8911.jpg",
                 byColor: {},
@@ -906,8 +1099,9 @@ const normalizeCatalogImageUrls = (catalog: TimbresCatalog): void => {
   }
 };
 
-const assertCatalogIntegrity = (catalog: TimbresCatalog): void => {
+export const validateTimbresCatalog = (catalog: TimbresCatalog): void => {
   const validBrandSlugs = new Set(catalog.brands.map((brand) => brand.slug));
+  const validColorCodes = new Set(Object.keys(TIMBRE_COLOR_META));
 
   for (const brand of catalog.brands) {
     for (const family of brand.families) {
@@ -934,8 +1128,30 @@ const assertCatalogIntegrity = (catalog: TimbresCatalog): void => {
           );
         }
 
+        if (typeof stamp.active !== "boolean") {
+          throw new Error(`Invalid stamp "${stamp.slug}": active must be a boolean`);
+        }
+
         if (stamp.colors.length === 0) {
           throw new Error(`Invalid stamp "${stamp.slug}": colors must not be empty`);
+        }
+
+        const declaredColorCodes = new Set<TimbreColorCode>();
+        for (const color of stamp.colors) {
+          if (!color || typeof color !== "object" || !validColorCodes.has(color.code)) {
+            throw new Error(`Invalid stamp "${stamp.slug}": unknown color code`);
+          }
+          if (typeof color.available !== "boolean") {
+            throw new Error(
+              `Invalid stamp "${stamp.slug}": color availability must be a boolean`,
+            );
+          }
+          if (declaredColorCodes.has(color.code)) {
+            throw new Error(
+              `Invalid stamp "${stamp.slug}": duplicate color code "${color.code}"`,
+            );
+          }
+          declaredColorCodes.add(color.code);
         }
 
         if (stamp.images.default.trim().length === 0) {
@@ -943,7 +1159,7 @@ const assertCatalogIntegrity = (catalog: TimbresCatalog): void => {
         }
 
         for (const byColorKey of Object.keys(stamp.images.byColor) as TimbreColorCode[]) {
-          if (!stamp.colors.includes(byColorKey)) {
+          if (!declaredColorCodes.has(byColorKey)) {
             throw new Error(
               `Invalid stamp "${stamp.slug}": images.byColor key "${byColorKey}" is not present in colors`,
             );
@@ -962,7 +1178,18 @@ const assertCatalogIntegrity = (catalog: TimbresCatalog): void => {
 };
 
 normalizeCatalogImageUrls(timbresCatalog);
-assertCatalogIntegrity(timbresCatalog);
+validateTimbresCatalog(timbresCatalog);
+
+export const isStampAvailable = (stamp: TimbreStamp): boolean => stamp.active;
+
+export const getAvailableStamps = (family: TimbreFamily): TimbreStamp[] =>
+  family.stamps.filter(isStampAvailable);
+
+export const getAvailableColors = (stamp: TimbreStamp): TimbreColorAvailability[] =>
+  stamp.colors.filter((color) => color.available);
+
+export const getInitialStampColor = (stamp: TimbreStamp): TimbreColorCode | undefined =>
+  getAvailableColors(stamp)[0]?.code;
 
 export const getBrands = (): TimbreBrand[] => timbresCatalog.brands;
 
@@ -991,13 +1218,13 @@ export const getStampBySlugs = (
     return undefined;
   }
 
-  return family.stamps.find((stamp) => stamp.slug === stampSlug);
+  return getAvailableStamps(family).find((stamp) => stamp.slug === stampSlug);
 };
 
 export const getStampStaticParams = (): TimbresStampRouteParams[] =>
   getBrands().flatMap((brand) =>
     brand.families.flatMap((family) =>
-      family.stamps.map((stamp) => ({
+      getAvailableStamps(family).map((stamp) => ({
         params: {
           brand: brand.slug,
           family: family.slug,

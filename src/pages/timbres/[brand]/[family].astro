@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import {
+  getAvailableStamps,
   getBrandBySlug,
   getFamilyBySlugs,
   getFamilyStaticParams,
@@ -23,6 +24,8 @@ const family = brandSlug && familySlug ? getFamilyBySlugs(brandSlug, familySlug)
 if (!brand || !family) {
   return Astro.redirect("/404");
 }
+
+const availableStamps = getAvailableStamps(family);
 ---
 
 <Layout title={`Timbres ${brand.name} ${family.name}`}>
@@ -30,8 +33,8 @@ if (!brand || !family) {
     <h1>{brand.name} · {family.name}</h1>
 
     {
-      family.stamps.length > 0 ? (
-        <StampGrid stamps={family.stamps} />
+      availableStamps.length > 0 ? (
+        <StampGrid stamps={availableStamps} />
       ) : (
         <p>No hay modelos publicados en esta familia todavía.</p>
       )

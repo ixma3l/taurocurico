@@ -1,5 +1,9 @@
 ---
-import type { TimbreBrand, TimbreFamily } from "@/data/timbres-data";
+import {
+  getAvailableStamps,
+  type TimbreBrand,
+  type TimbreFamily,
+} from "@/data/timbres-data";
 
 const { brand, family } = Astro.props as {
   brand: TimbreBrand;
@@ -9,7 +13,7 @@ const { brand, family } = Astro.props as {
 
 <article class="family-card">
   <h2>{family.name}</h2>
-  <p>{family.stamps.length} modelos publicados</p>
+  <p>{getAvailableStamps(family).length} modelos publicados</p>
   <a href={`/timbres/${brand.slug}/${family.slug}`}>Ver modelos</a>
 </article>
 

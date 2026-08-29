@@ -2,6 +2,7 @@
 import StampDetail from "@/components/timbres/StampDetail.astro";
 import StampGrid from "@/components/timbres/StampGrid.astro";
 import {
+  getAvailableStamps,
   getBrandBySlug,
   getFamilyBySlugs,
   getStampBySlugs,
@@ -31,7 +32,9 @@ if (!brand || !family || !stamp) {
   return Astro.redirect("/404");
 }
 
-const relatedStamps = family.stamps.filter((candidate) => candidate.slug !== stamp.slug).slice(0, 4);
+const relatedStamps = getAvailableStamps(family)
+  .filter((candidate) => candidate.slug !== stamp.slug)
+  .slice(0, 4);
 ---
 
 <Layout title={`Timbre ${stamp.modelName}`}>
