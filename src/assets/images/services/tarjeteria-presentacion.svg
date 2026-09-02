@@ -1,0 +1,11 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Tarjeta de presentación profesional</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="190" y="280" width="820" height="400" rx="32" fill="#0099a8" stroke="#102a43" stroke-width="12" transform="rotate(-5 190 280)"/>
+  <rect x="210" y="220" width="820" height="400" rx="32" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M216 248a22 22 0 0 1 22-22h236v388H238a22 22 0 0 1-22-22Z" fill="#ff5f00"/>
+  <circle cx="346" cy="352" r="62" fill="#f4f7f8"/>
+  <path d="M292 470h108M292 520h108" stroke="#f4f7f8" stroke-width="16" stroke-linecap="round"/>
+  <path d="M550 326h320" stroke="#102a43" stroke-width="28" stroke-linecap="round"/>
+  <g stroke="#0099a8" stroke-width="15" stroke-linecap="round"><path d="M550 410h390M550 474h310M550 538h220"/></g>
+</svg>

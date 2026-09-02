@@ -1,0 +1,19 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Formularios impresos con campos organizados</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="300" y="170" width="560" height="590" rx="24" fill="#d9e2ec" transform="rotate(-5 300 170)"/>
+  <rect x="330" y="120" width="560" height="620" rx="24" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M354 144h512v104H354z" fill="#ff5f00"/>
+  <circle cx="400" cy="196" r="19" fill="#fff"/>
+  <path d="M446 177h245M446 215h162" stroke="#fff" stroke-width="18" stroke-linecap="round"/>
+  <g fill="none" stroke="#0099a8" stroke-width="12">
+    <rect x="386" y="310" width="48" height="48" rx="7"/>
+    <rect x="386" y="414" width="48" height="48" rx="7"/>
+    <rect x="386" y="518" width="48" height="48" rx="7"/>
+  </g>
+  <path d="m398 334 13 13 28-33M398 438l13 13 28-33" fill="none" stroke="#ff5f00" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <g stroke="#627d98" stroke-width="14" stroke-linecap="round">
+    <path d="M478 328h310M478 370h230M478 432h310M478 474h190M478 536h310M478 578h250"/>
+  </g>
+  <path d="M386 654h402" stroke="#d9e2ec" stroke-width="16" stroke-linecap="round"/>
+</svg>

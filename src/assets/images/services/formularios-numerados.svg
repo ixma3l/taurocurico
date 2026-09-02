@@ -1,0 +1,15 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Formularios numerados para control correlativo</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="300" y="150" width="600" height="600" rx="28" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M306 178a22 22 0 0 1 22-22h544a22 22 0 0 1 22 22v106H306Z" fill="#0099a8"/>
+  <path d="M360 214h260" stroke="#f4f7f8" stroke-width="22" stroke-linecap="round"/>
+  <rect x="690" y="188" width="150" height="54" rx="12" fill="#ff5f00"/>
+  <g fill="none" stroke="#102a43" stroke-width="11">
+    <rect x="360" y="350" width="480" height="76" rx="12"/>
+    <rect x="360" y="476" width="480" height="76" rx="12"/>
+    <rect x="360" y="602" width="480" height="76" rx="12"/>
+  </g>
+  <g fill="#ff5f00"><circle cx="404" cy="388" r="15"/><circle cx="404" cy="514" r="15"/><circle cx="404" cy="640" r="15"/></g>
+  <g stroke="#0099a8" stroke-width="13" stroke-linecap="round"><path d="M454 388h300"/><path d="M454 514h250"/><path d="M454 640h280"/></g>
+</svg>

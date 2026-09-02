@@ -1,0 +1,10 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Documentos individuales impresos y ordenados</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <path d="M230 250h740v450H230z" fill="#102a43" rx="30"/>
+  <rect x="290" y="120" width="390" height="500" rx="18" fill="#fff" stroke="#102a43" stroke-width="12" transform="rotate(-7 290 120)"/>
+  <rect x="510" y="150" width="390" height="500" rx="18" fill="#fff" stroke="#102a43" stroke-width="12" transform="rotate(8 510 150)"/>
+  <path d="M356 216h210M334 278h278M326 336h240" stroke="#0099a8" stroke-width="18" stroke-linecap="round"/>
+  <path d="M590 246h220M582 308h250M592 368h190" stroke="#ff5f00" stroke-width="18" stroke-linecap="round"/>
+  <rect x="370" y="650" width="460" height="90" rx="22" fill="#0099a8" stroke="#102a43" stroke-width="12"/>
+</svg>

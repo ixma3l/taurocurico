@@ -1,0 +1,10 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Juego de formularios con varias copias</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="360" y="190" width="560" height="560" rx="24" fill="#0099a8" stroke="#102a43" stroke-width="12" transform="rotate(7 360 190)"/>
+  <rect x="280" y="160" width="560" height="560" rx="24" fill="#ff5f00" stroke="#102a43" stroke-width="12" transform="rotate(-5 280 160)"/>
+  <rect x="320" y="120" width="560" height="590" rx="24" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M326 148h548v102H326z" fill="#0099a8"/>
+  <g stroke="#102a43" stroke-width="13" stroke-linecap="round"><path d="M390 324h420M390 384h320M390 468h420M390 528h270M390 612h360"/></g>
+  <g fill="none" stroke="#ff5f00" stroke-width="12"><circle cx="760" cy="380" r="34"/><circle cx="760" cy="524" r="34"/></g>
+</svg>

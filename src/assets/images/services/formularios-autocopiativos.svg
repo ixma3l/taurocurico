@@ -1,0 +1,11 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Talón de formularios autocopiativos por capas</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <path d="m350 220 570 80-76 470-570-80Z" fill="#0099a8" stroke="#102a43" stroke-width="12" stroke-linejoin="round"/>
+  <path d="m310 170 570 80-76 470-570-80Z" fill="#ff5f00" stroke="#102a43" stroke-width="12" stroke-linejoin="round"/>
+  <path d="m350 120 570 80-76 470-570-80Z" fill="#fff" stroke="#102a43" stroke-width="12" stroke-linejoin="round"/>
+  <path d="m366 158 538 76-18 112-538-76Z" fill="#0099a8"/>
+  <path d="m430 218 230 32" stroke="#f4f7f8" stroke-width="22" stroke-linecap="round"/>
+  <g fill="none" stroke="#102a43" stroke-width="11"><path d="m370 350 470 66-18 112-470-66Z"/><path d="m326 500 470 66-12 76-470-66Z"/></g>
+  <path d="m398 398 250 35M354 546l220 31" stroke="#ff5f00" stroke-width="14" stroke-linecap="round"/>
+</svg>

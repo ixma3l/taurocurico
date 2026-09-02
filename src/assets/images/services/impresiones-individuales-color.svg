@@ -1,0 +1,10 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Láminas individuales con impresión a color</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="260" y="120" width="680" height="650" rx="28" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <rect x="320" y="184" width="560" height="300" rx="18" fill="#0099a8"/>
+  <circle cx="470" cy="316" r="86" fill="#ff5f00"/>
+  <path d="m320 452 150-124 114 90 126-154 170 188Z" fill="#102a43" opacity=".82"/>
+  <g stroke="#102a43" stroke-width="16" stroke-linecap="round"><path d="M330 560h390M330 620h500M330 680h290"/></g>
+  <circle cx="808" cy="570" r="34" fill="#ff5f00"/><circle cx="808" cy="652" r="34" fill="#0099a8"/>
+</svg>

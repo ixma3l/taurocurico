@@ -1,5 +1,5 @@
 ---
-import MenuData from "@/data/navbar-menu.data";
+import { buildMenuData } from "@/data/navbar-menu.data";
 
 interface RenderMenuNode {
   title: string;
@@ -7,7 +7,7 @@ interface RenderMenuNode {
   subMenu?: RenderMenuNode[];
 }
 
-const menuItems = MenuData as RenderMenuNode[];
+const menuItems = buildMenuData() as RenderMenuNode[];
 const normalizePath = (path: string) => path === "/" ? path : path.replace(/\/+$/, "");
 const currentPath = normalizePath(Astro.url.pathname);
 const isPathActive = (path: string) => Boolean(path) && normalizePath(path) === currentPath;

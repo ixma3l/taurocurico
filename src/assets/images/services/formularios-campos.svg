@@ -1,0 +1,9 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Formulario con secciones y campos para completar</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="250" y="120" width="700" height="660" rx="28" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M256 148a22 22 0 0 1 22-22h644a22 22 0 0 1 22 22v116H256Z" fill="#0099a8"/>
+  <path d="M320 194h300" stroke="#f4f7f8" stroke-width="24" stroke-linecap="round"/>
+  <g fill="none" stroke="#102a43" stroke-width="10"><rect x="320" y="326" width="560" height="84" rx="12"/><rect x="320" y="464" width="250" height="84" rx="12"/><rect x="630" y="464" width="250" height="84" rx="12"/><rect x="320" y="602" width="560" height="100" rx="12"/></g>
+  <path d="M346 368h270M346 506h130M656 506h130M346 650h360" stroke="#ff5f00" stroke-width="14" stroke-linecap="round"/>
+</svg>

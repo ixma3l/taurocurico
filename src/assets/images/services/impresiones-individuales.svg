@@ -1,0 +1,19 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Documentos preparados para impresiones individuales</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <path d="M270 300h660a54 54 0 0 1 54 54v306a54 54 0 0 1-54 54H270a54 54 0 0 1-54-54V354a54 54 0 0 1 54-54Z" fill="#102a43"/>
+  <path d="M342 126h516v310H342z" fill="#fff" stroke="#d9e2ec" stroke-width="12"/>
+  <path d="M390 184h278" stroke="#ff5f00" stroke-width="30" stroke-linecap="round"/>
+  <g stroke="#627d98" stroke-width="14" stroke-linecap="round">
+    <path d="M390 252h372M390 304h310M390 356h342"/>
+  </g>
+  <rect x="280" y="372" width="640" height="214" rx="24" fill="#fff"/>
+  <circle cx="842" cy="426" r="18" fill="#0099a8"/>
+  <circle cx="786" cy="426" r="18" fill="#ff5f00"/>
+  <path d="M342 522h516" stroke="#d9e2ec" stroke-width="16" stroke-linecap="round"/>
+  <path d="M342 540h516v222H342z" fill="#fff" stroke="#d9e2ec" stroke-width="12"/>
+  <path d="M390 606h310" stroke="#0099a8" stroke-width="24" stroke-linecap="round"/>
+  <g stroke="#627d98" stroke-width="14" stroke-linecap="round">
+    <path d="M390 662h372M390 710h250"/>
+  </g>
+</svg>

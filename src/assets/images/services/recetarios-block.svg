@@ -1,0 +1,10 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Block de recetarios personalizados</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="330" y="180" width="590" height="590" rx="28" fill="#ff5f00" stroke="#102a43" stroke-width="12" transform="rotate(5 330 180)"/>
+  <rect x="280" y="120" width="590" height="610" rx="28" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M286 148a22 22 0 0 1 22-22h556v126H286Z" fill="#0099a8"/>
+  <path d="M700 164v58M671 193h58" stroke="#f4f7f8" stroke-width="20" stroke-linecap="round"/>
+  <g stroke="#102a43" stroke-width="15" stroke-linecap="round"><path d="M350 338h430M350 406h330M350 502h430M350 570h380M350 666h250"/></g>
+  <circle cx="790" cy="654" r="34" fill="#ff5f00"/>
+</svg>
