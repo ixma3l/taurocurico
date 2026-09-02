@@ -1,0 +1,12 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Orden de trabajo con tareas y herramientas</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="250" y="120" width="700" height="660" rx="30" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M256 150a24 24 0 0 1 24-24h640a24 24 0 0 1 24 24v116H256Z" fill="#102a43"/>
+  <path d="M330 196h270" stroke="#f4f7f8" stroke-width="22" stroke-linecap="round"/>
+  <circle cx="830" cy="196" r="34" fill="#ff5f00"/>
+  <g fill="none" stroke="#0099a8" stroke-width="11"><rect x="330" y="330" width="54" height="54" rx="8"/><rect x="330" y="448" width="54" height="54" rx="8"/><rect x="330" y="566" width="54" height="54" rx="8"/></g>
+  <path d="m342 356 15 15 34-40M342 474l15 15 34-40" fill="none" stroke="#ff5f00" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <g stroke="#102a43" stroke-width="14" stroke-linecap="round"><path d="M430 348h250M430 390h180M430 466h250M430 508h210M430 584h210M430 626h160"/></g>
+  <path d="m790 548 42 42 74-74a70 70 0 0 1-92 92l-78 78-46-46 78-78a70 70 0 0 1 92-92Z" fill="#0099a8" stroke="#102a43" stroke-width="10" stroke-linejoin="round"/>
+</svg>

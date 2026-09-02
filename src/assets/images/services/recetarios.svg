@@ -1,0 +1,15 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Recetario personalizado con indicaciones organizadas</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="304" y="116" width="592" height="668" rx="30" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M310 146a24 24 0 0 1 24-24h86v656h-86a24 24 0 0 1-24-24Z" fill="#0099a8"/>
+  <g fill="#f4f7f8" stroke="#102a43" stroke-width="8">
+    <circle cx="420" cy="214" r="18"/><circle cx="420" cy="318" r="18"/><circle cx="420" cy="422" r="18"/><circle cx="420" cy="526" r="18"/><circle cx="420" cy="630" r="18"/>
+  </g>
+  <path d="M720 184v102M669 235h102" stroke="#ff5f00" stroke-width="30" stroke-linecap="round"/>
+  <path d="M500 348h310" stroke="#102a43" stroke-width="22" stroke-linecap="round"/>
+  <g stroke="#627d98" stroke-width="14" stroke-linecap="round">
+    <path d="M500 416h310M500 470h250M500 548h310M500 602h278M500 680h210"/>
+  </g>
+  <path d="m774 650 112-112 40 40-112 112-62 22Z" fill="#ff5f00" stroke="#102a43" stroke-width="10" stroke-linejoin="round"/>
+</svg>

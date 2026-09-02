@@ -1,0 +1,15 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Conjunto de tarjetas impresas personalizadas</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="210" y="266" width="620" height="390" rx="28" fill="#d9e2ec" stroke="#102a43" stroke-width="12" transform="rotate(-10 210 266)"/>
+  <rect x="356" y="190" width="620" height="390" rx="28" fill="#0099a8" stroke="#102a43" stroke-width="12" transform="rotate(9 356 190)"/>
+  <rect x="286" y="238" width="628" height="394" rx="28" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M292 266a22 22 0 0 1 22-22h174v382H314a22 22 0 0 1-22-22Z" fill="#ff5f00"/>
+  <circle cx="390" cy="376" r="54" fill="#fff"/>
+  <path d="M340 476h100M340 520h100" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+  <path d="M556 336h250" stroke="#102a43" stroke-width="28" stroke-linecap="round"/>
+  <g stroke="#627d98" stroke-width="14" stroke-linecap="round">
+    <path d="M556 408h288M556 460h238M556 538h140"/>
+  </g>
+  <circle cx="824" cy="538" r="24" fill="#0099a8"/>
+</svg>

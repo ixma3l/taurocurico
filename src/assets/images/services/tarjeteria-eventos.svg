@@ -1,0 +1,11 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Invitaciones y tarjetas para eventos</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <path d="M210 284 600 94l390 190v420H210Z" fill="#0099a8" stroke="#102a43" stroke-width="12" stroke-linejoin="round"/>
+  <rect x="300" y="150" width="600" height="470" rx="28" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M306 178a22 22 0 0 1 22-22h544a22 22 0 0 1 22 22v104H306Z" fill="#ff5f00"/>
+  <circle cx="600" cy="382" r="58" fill="#0099a8"/>
+  <path d="M452 492h296M402 554h396" stroke="#102a43" stroke-width="17" stroke-linecap="round"/>
+  <path d="m216 332 384 248 384-248v372H216Z" fill="#f4f7f8" stroke="#102a43" stroke-width="12" stroke-linejoin="round"/>
+  <path d="m216 704 292-238M984 704 692 466" stroke="#ff5f00" stroke-width="16"/>
+</svg>

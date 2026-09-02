@@ -1,4 +1,4 @@
-import { buildTimbresMenuTree } from "@/data/timbres-data";
+import { buildTimbresMenuTree } from "./timbres-data";
 
 export interface SubMenuItem {
   title: string;
@@ -22,34 +22,33 @@ const timbresSubMenu: SubMenuItem[] = buildTimbresMenuTree().map((brandNode) => 
   })),
 }));
 
-export const MenuData: MenuItem[] = [
-  {
-    id: 1,
-    title: "Inicio",
-    path: "/",
-  },
-  {
-    id: 2,
-    title: "Acerca",
-    path: "/acerca",
-  },
-  {
-    id: 3,
-    title: "Timbres",
-    path: "",
-    subMenu: timbresSubMenu,
-  },
-  {
-    id: 4,
-    title: "Servicios",
-    path: "/servicios",
-    subMenu: timbresSubMenu,
-  },
-  {
-    id: 5,
-    title: "Contacto",
-    path: "/contacto",
-  },
-];
-
-export default MenuData;
+export const buildMenuData = (): MenuItem[] => {
+  return [
+    {
+      id: 1,
+      title: "Inicio",
+      path: "/",
+    },
+    {
+      id: 2,
+      title: "Acerca",
+      path: "/acerca",
+    },
+    {
+      id: 3,
+      title: "Timbres",
+      path: "",
+      subMenu: timbresSubMenu,
+    },
+    {
+      id: 4,
+      title: "Servicios",
+      path: "/servicios",
+    },
+    {
+      id: 5,
+      title: "Contacto",
+      path: "/contacto",
+    },
+  ];
+};

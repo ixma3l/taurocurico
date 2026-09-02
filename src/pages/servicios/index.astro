@@ -1,0 +1,85 @@
+---
+import ServiceCard from "@/components/services/ServiceCard.astro";
+import { getActiveServices } from "@/data/services.data";
+import Layout from "@/layouts/Layout.astro";
+
+const services = getActiveServices();
+---
+
+<Layout title="Servicios">
+  <section class="container services-page" aria-labelledby="services-heading">
+    <header>
+      <p class="services-page__eyebrow">Servicios</p>
+      <h1 id="services-heading">Soluciones para tus proyectos</h1>
+      <p>Conocé los servicios que ofrecemos para resolver tus necesidades gráficas.</p>
+    </header>
+
+    {services.length > 0 ? (
+      <ul class="services-page__grid">
+        {services.map((service) => (
+          <li>
+            <ServiceCard service={service} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="services-page__empty">No hay servicios disponibles por el momento.</p>
+    )}
+  </section>
+</Layout>
+
+<style>
+  .services-page {
+    display: grid;
+    gap: clamp(28px, 5vw, 52px);
+    padding-bottom: clamp(48px, 8vw, 88px);
+    padding-top: clamp(40px, 7vw, 72px);
+  }
+
+  .services-page header {
+    display: grid;
+    gap: 14px;
+    max-width: 720px;
+  }
+
+  .services-page__eyebrow {
+    color: var(--orange);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .services-page h1 {
+    color: #102a43;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.1;
+  }
+
+  .services-page header > p:last-child,
+  .services-page__empty {
+    color: #486581;
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+
+  .services-page__grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+    list-style: none;
+    padding: 0;
+  }
+
+  @media (min-width: 640px) {
+    .services-page__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .services-page__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

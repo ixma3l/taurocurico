@@ -1,0 +1,383 @@
+---
+import {
+  buildServiceStaticPaths,
+  type PrintingService,
+} from "@/data/services.data";
+import Layout from "@/layouts/Layout.astro";
+
+export function getStaticPaths() {
+  return buildServiceStaticPaths();
+}
+
+const { service } = Astro.props as { service: PrintingService };
+const initialImage = service.images[0];
+const hasMultipleImages = service.images.length > 1;
+const galleryAttributes = hasMultipleImages
+  ? {
+      "data-service-gallery": "",
+      "data-selected-index": "0",
+      role: "group" as const,
+      "aria-label": `Galería de imágenes de ${service.title}`,
+      tabindex: "0",
+    }
+  : {};
+const galleryImageAttributes = hasMultipleImages
+  ? { "data-service-gallery-image": "" }
+  : {};
+---
+
+<Layout title={`${service.title} | Servicios`}>
+  <article class="container service-detail">
+    <nav aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="/servicios">Servicios</a></li>
+        <li><span aria-current="page">{service.title}</span></li>
+      </ol>
+    </nav>
+
+    <section class="service-detail__primary">
+      <div
+        class="service-detail__media-wrap"
+        {...galleryAttributes}
+      >
+        <div class="service-gallery__main">
+          <img
+            class="service-detail__media"
+            {...galleryImageAttributes}
+            src={initialImage.src}
+            alt={initialImage.alt}
+            width="720"
+            height="540"
+            loading="eager"
+          />
+          {hasMultipleImages && (
+            <>
+              <button
+                class="service-gallery__arrow service-gallery__arrow--previous"
+                type="button"
+                data-service-gallery-previous
+                aria-label="Ver imagen anterior"
+              >
+                <span aria-hidden="true">←</span>
+              </button>
+              <button
+                class="service-gallery__arrow service-gallery__arrow--next"
+                type="button"
+                data-service-gallery-next
+                aria-label="Ver imagen siguiente"
+              >
+                <span aria-hidden="true">→</span>
+              </button>
+            </>
+          )}
+        </div>
+
+        {hasMultipleImages && (
+          <div
+            class="service-gallery__thumbnails"
+            role="group"
+            aria-label="Seleccionar imagen"
+          >
+            {service.images.map((image, index) => (
+              <button
+                class={`service-gallery__thumbnail ${index === 0 ? "is-selected" : ""}`}
+                type="button"
+                data-service-gallery-thumbnail
+                data-image={image.src}
+                data-alt={image.alt}
+                data-index={index}
+                aria-label={`Ver imagen ${index + 1}: ${image.alt}`}
+                aria-pressed={index === 0 ? "true" : "false"}
+              >
+                <img
+                  src={image.src}
+                  alt=""
+                  width="180"
+                  height="135"
+                  loading="lazy"
+                />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div class="service-detail__content">
+        <header class="service-detail__introduction">
+          <p class="service-detail__eyebrow">Servicio de impresión</p>
+          <h1>{service.title}</h1>
+          <p class="service-detail__summary">{service.summary}</p>
+        </header>
+
+        <section class="service-detail__description" aria-labelledby="service-description-heading">
+          <h2 id="service-description-heading">Descripción</h2>
+          <div class="service-detail__description-body">
+            {service.description.map((paragraph) => <p>{paragraph}</p>)}
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <div class="service-detail__lists">
+      <section aria-labelledby="service-features-heading">
+        <h2 id="service-features-heading">Características</h2>
+        <ul>
+          {service.features.map((feature) => <li>{feature}</li>)}
+        </ul>
+      </section>
+
+      <section aria-labelledby="service-applications-heading">
+        <h2 id="service-applications-heading">Aplicaciones</h2>
+        <ul>
+          {service.applications.map((application) => <li>{application}</li>)}
+        </ul>
+      </section>
+    </div>
+  </article>
+
+  <script>
+    import { initAllServiceGalleries } from "@/components/services/service-gallery";
+
+    const init = () => initAllServiceGalleries();
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+      init();
+    }
+
+    document.addEventListener("astro:page-load", init);
+  </script>
+</Layout>
+
+<style>
+  .service-detail {
+    display: grid;
+    gap: clamp(28px, 5vw, 52px);
+    padding-bottom: clamp(48px, 8vw, 88px);
+    padding-top: 28px;
+  }
+
+  .service-detail nav ol {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+  }
+
+  .service-detail nav li {
+    color: #627d98;
+    display: inline-flex;
+    gap: 8px;
+  }
+
+  .service-detail nav li:not(:last-child)::after {
+    content: "/";
+  }
+
+  .service-detail nav a {
+    color: var(--turquoise);
+    text-decoration: none;
+  }
+
+  .service-detail nav a:hover,
+  .service-detail nav a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .service-detail__primary {
+    display: grid;
+    gap: clamp(24px, 4vw, 56px);
+  }
+
+  .service-detail__media-wrap {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .service-detail__media-wrap:focus-visible {
+    outline: 2px solid #0b7285;
+    outline-offset: 4px;
+  }
+
+  .service-gallery__main {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #d9e2ec;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .service-detail__media {
+    aspect-ratio: 4 / 3;
+    display: block;
+    max-height: 560px;
+    object-fit: contain;
+    transition: opacity 180ms ease;
+    width: 100%;
+  }
+
+  .service-detail__media.is-swapping {
+    opacity: 0.35;
+  }
+
+  .service-gallery__arrow {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #9fb3c8;
+    border-radius: 50%;
+    color: #102a43;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1.35rem;
+    height: 44px;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+  }
+
+  .service-gallery__arrow--previous {
+    left: 12px;
+  }
+
+  .service-gallery__arrow--next {
+    right: 12px;
+  }
+
+  .service-gallery__arrow:hover {
+    border-color: #0b7285;
+  }
+
+  .service-gallery__arrow:focus-visible,
+  .service-gallery__thumbnail:focus-visible {
+    outline: 3px solid #0b7285;
+    outline-offset: 2px;
+  }
+
+  .service-gallery__thumbnails {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 2px 2px 8px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .service-gallery__thumbnail {
+    background: #fff;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    flex: 0 0 clamp(96px, 28%, 140px);
+    overflow: hidden;
+    padding: 3px;
+    scroll-snap-align: start;
+  }
+
+  .service-gallery__thumbnail.is-selected {
+    border-color: #0099a8;
+    box-shadow: 0 0 0 2px rgba(0, 153, 168, 0.18);
+  }
+
+  .service-gallery__thumbnail img {
+    aspect-ratio: 4 / 3;
+    display: block;
+    object-fit: contain;
+    width: 100%;
+  }
+
+  .service-detail__content {
+    align-content: start;
+    display: grid;
+    gap: 28px;
+    min-width: 0;
+  }
+
+  .service-detail__introduction,
+  .service-detail__description,
+  .service-detail__lists section {
+    display: grid;
+    gap: 16px;
+  }
+
+  .service-detail__eyebrow {
+    color: #627d98;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .service-detail h1 {
+    color: #102a43;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.05;
+  }
+
+  .service-detail h2 {
+    color: #102a43;
+    font-size: 1.3rem;
+  }
+
+  .service-detail p,
+  .service-detail li {
+    color: #486581;
+    line-height: 1.7;
+  }
+
+  .service-detail__summary {
+    font-size: 1.1rem;
+    max-width: 62ch;
+  }
+
+  .service-detail__description {
+    border-top: 1px solid #d9e2ec;
+    padding-top: 24px;
+  }
+
+  .service-detail__description-body {
+    display: grid;
+    gap: 16px;
+  }
+
+  .service-detail__lists {
+    display: grid;
+    gap: 24px;
+  }
+
+  .service-detail__lists section {
+    background: var(--white);
+    border: 1px solid #d9e2ec;
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .service-detail__lists ul {
+    display: grid;
+    gap: 10px;
+    padding-left: 22px;
+  }
+
+  @media (min-width: 768px) {
+    .service-detail__primary {
+      align-items: start;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+
+    .service-detail__media-wrap {
+      position: sticky;
+      top: 24px;
+    }
+
+    .service-detail__lists {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

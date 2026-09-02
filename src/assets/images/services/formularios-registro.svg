@@ -1,0 +1,10 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Planilla de registro con filas verificadas</title>
+  <rect width="1200" height="900" rx="48" fill="#f4f7f8"/>
+  <rect x="260" y="130" width="680" height="650" rx="30" fill="#fff" stroke="#102a43" stroke-width="12"/>
+  <path d="M266 160a24 24 0 0 1 24-24h620a24 24 0 0 1 24 24v110H266Z" fill="#ff5f00"/>
+  <path d="M330 204h300" stroke="#f4f7f8" stroke-width="22" stroke-linecap="round"/>
+  <g stroke="#102a43" stroke-width="10" fill="none"><path d="M330 340h540v330H330Z"/><path d="M430 340v330M700 340v330M330 422h540M330 504h540M330 586h540"/></g>
+  <g fill="none" stroke="#0099a8" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"><path d="m356 380 20 20 34-42"/><path d="m356 462 20 20 34-42"/><path d="m356 626 20 20 34-42"/></g>
+  <g stroke="#ff5f00" stroke-width="13" stroke-linecap="round"><path d="M470 381h180"/><path d="M470 463h140"/><path d="M470 545h190"/><path d="M470 627h160"/></g>
+</svg>
