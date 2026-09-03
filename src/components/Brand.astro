@@ -1,15 +1,88 @@
 ---
+import artelWordmarkUrl from "@/assets/images/brands/artel-wordmark.svg?url";
+import giottoWordmarkUrl from "@/assets/images/brands/giotto-wordmark.svg?url";
+import isofitWordmarkUrl from "@/assets/images/brands/isofit-wordmark.svg?url";
+import torreWordmarkUrl from "@/assets/images/brands/torre-wordmark.svg?url";
+import trodatWordmarkUrl from "@/assets/images/brands/trodat-wordmark.svg?url";
+
+const brands = [
+  { name: "Trodat", image: trodatWordmarkUrl },
+  { name: "Isofit", image: isofitWordmarkUrl },
+  { name: "Torre", image: torreWordmarkUrl },
+  { name: "Giotto", image: giottoWordmarkUrl },
+  { name: "Artel", image: artelWordmarkUrl },
+];
 ---
-<div class="container">
-    <ul>
-        <li>Trodat</li>
-        <li>Isofit</li>
-        <li>Torre</li>
-        <li>Giotto</li>
-        <li>Artel</li>
+
+<section class="brand-strip" aria-label="Featured brands">
+  <div class="container">
+    <ul class="brand-strip__list">
+      {
+        brands.map((brand) => (
+          <li class="brand-strip__item">
+            <img
+              class="brand-strip__logo"
+              src={brand.image}
+              alt={`${brand.name} wordmark`}
+              width="240"
+              height="80"
+              loading="lazy"
+            />
+          </li>
+        ))
+      }
     </ul>
-</div>
+  </div>
+</section>
 
 <style>
+  .brand-strip {
+    overflow: hidden;
+    background-color: rgb(240 240 240);
+    border-bottom: solid 3px var(--orange);
+  }
 
-</style
+  .brand-strip__list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 1rem 1.25rem;
+    list-style: none;
+    scroll-padding-inline: 1.25rem;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-inline: contain;
+  }
+
+  .brand-strip__item {
+    display: flex;
+    flex: 0 0 72%;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
+  .brand-strip__logo {
+    display: block;
+    width: 100%;
+    height: 4rem;
+    object-fit: contain;
+    filter: brightness(0);
+    opacity: 0.5;
+  }
+
+  @media (min-width: 768px) {
+    .brand-strip__list {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 2rem;
+      overflow-x: visible;
+      padding-inline: 0;
+    }
+
+    .brand-strip__item {
+      width: auto;
+    }
+  }
+</style>
