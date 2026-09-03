@@ -1,0 +1,296 @@
+---
+import SvgStamp from "../svg-stamp/SvgStamp.astro";
+
+const inkColor = "#141414";
+const trackId = "homepage-stamp-carousel-track";
+const stamps = [
+  {
+    src: "/uploads/stamps/ecuestre.svg",
+    angle: 0,
+    seed: 17,
+    roughness: 1.7,
+    grit: 18,
+    scale: 0.96,
+  },
+  {
+    src: "/uploads/stamps/lxf.svg",
+    angle: 0,
+    seed: 29,
+    roughness: 2.1,
+    grit: 18,
+    scale: 0.92,
+  },
+  {
+    src: "/uploads/stamps/oraculo.svg",
+    angle: 0,
+    seed: 43,
+    roughness: 1.9,
+    grit: 18,
+    scale: 0.95,
+  },
+  {
+    src: "/uploads/stamps/sagrada.svg",
+    angle: 0,
+    seed: 61,
+    roughness: 2.3,
+    grit: 18,
+    scale: 0.93,
+  },
+  {
+    src: "/uploads/stamps/central.svg",
+    angle: 0,
+    seed: 61,
+    roughness: 2.3,
+    grit: 18,
+    scale: 0.93,
+    },
+    {
+    src: "/uploads/stamps/galo.svg",
+    angle: 0,
+    seed: 61,
+    roughness: 2.3,
+    grit: 18,
+    scale: 0.93,
+  },
+  {
+    src: "/uploads/stamps/selva.svg",
+    angle: 0,
+    seed: 61,
+    roughness: 2.3,
+    grit: 18,
+    scale: 0.93,
+  },
+] as const;
+---
+
+<section
+  class="stamp-carousel"
+  aria-label="Carrusel decorativo de sellos"
+  data-stamp-carousel
+>
+  <div class="stamp-carousel__viewport">
+    <div
+      class="stamp-carousel__track"
+      id={trackId}
+      data-stamp-carousel-track
+    >
+      <ul class="stamp-carousel__group" data-stamp-carousel-group>
+        {
+          stamps.map((stamp) => (
+            <li class="stamp-carousel__item">
+              <SvgStamp
+                class="stamp-carousel__stamp"
+                color={inkColor}
+                roughness={stamp.roughness}
+                grit={stamp.grit}
+                angle={stamp.angle}
+                bleed={0.2}
+                opacity={0.78}
+                seed={stamp.seed}
+                scale={stamp.scale}
+              >
+                <img
+                  src={stamp.src}
+                  alt=""
+                  width="220"
+                  height="150"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </SvgStamp>
+            </li>
+          ))
+        }
+      </ul>
+
+      <ul
+        class="stamp-carousel__group stamp-carousel__duplicate"
+        data-stamp-carousel-group
+        aria-hidden="true"
+      >
+        {
+          stamps.map((stamp) => (
+            <li class="stamp-carousel__item">
+              <SvgStamp
+                class="stamp-carousel__stamp"
+                color={inkColor}
+                roughness={stamp.roughness}
+                grit={stamp.grit}
+                angle={stamp.angle}
+                bleed={0.2}
+                opacity={0.78}
+                seed={stamp.seed}
+                scale={stamp.scale}
+              >
+                <img
+                  src={stamp.src}
+                  alt=""
+                  width="220"
+                  height="150"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </SvgStamp>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <button
+    class="stamp-carousel__toggle"
+    type="button"
+    data-stamp-carousel-toggle
+    aria-pressed="false"
+    aria-label="Pausar carrusel de sellos"
+    aria-controls="homepage-stamp-carousel-track"
+  >
+    <span class="stamp-carousel__pause-icon" aria-hidden="true">Ⅱ</span>
+    <span class="stamp-carousel__play-icon" aria-hidden="true">▶</span>
+  </button>
+</section>
+
+<script>
+  import { initAllStampCarousels } from "./stamp-carousel";
+
+  const init = () => initAllStampCarousels();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+
+  document.addEventListener("astro:page-load", init);
+</script>
+
+<style>
+  .stamp-carousel {
+    --stamp-carousel-gap: clamp(1.75rem, 5vw, 4.5rem);
+
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin-block: clamp(1.5rem, 4vw, 3rem);
+    overflow: hidden;
+    background: var(--white);
+  }
+
+  .stamp-carousel__viewport {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .stamp-carousel__track {
+    display: flex;
+    width: max-content;
+    animation: stamp-marquee 28s linear infinite;
+    will-change: transform;
+  }
+
+  .stamp-carousel.is-paused .stamp-carousel__track {
+    animation-play-state: paused;
+  }
+
+  .stamp-carousel__group {
+    display: flex;
+    flex: 0 0 auto;
+    min-width: 100vw;
+    gap: var(--stamp-carousel-gap);
+    align-items: center;
+    justify-content: space-around;
+    margin: 0;
+    padding-block: clamp(1.5rem, 4vw, 2.75rem);
+    padding-inline: calc(var(--stamp-carousel-gap) / 2);
+    list-style: none;
+  }
+
+  .stamp-carousel__item {
+    flex: 0 0 clamp(8rem, 20vw, 13.75rem);
+    width: clamp(8rem, 20vw, 13.75rem);
+    height: clamp(5.75rem, 14vw, 9.375rem);
+  }
+
+  .stamp-carousel__stamp {
+    width: 100%;
+    height: 100%;
+  }
+
+  .stamp-carousel__toggle {
+    position: absolute;
+    right: clamp(0.5rem, 2vw, 1rem);
+    bottom: 0.5rem;
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    place-items: center;
+    border: 1px solid rgb(32 101 95 / 25%);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 78%);
+    color: #20655f;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.6875rem;
+    line-height: 1;
+  }
+
+  .stamp-carousel__toggle:hover:not(:disabled),
+  .stamp-carousel__toggle:focus-visible {
+    border-color: #20655f;
+    background: var(--white);
+  }
+
+  .stamp-carousel__toggle:focus-visible {
+    outline: 2px solid var(--turquoise);
+    outline-offset: 2px;
+  }
+
+  .stamp-carousel__toggle:disabled {
+    cursor: default;
+    opacity: 0.55;
+  }
+
+  .stamp-carousel__play-icon,
+  .stamp-carousel__toggle[aria-pressed="true"] .stamp-carousel__pause-icon {
+    display: none;
+  }
+
+  .stamp-carousel__toggle[aria-pressed="true"] .stamp-carousel__play-icon {
+    display: inline;
+  }
+
+  @keyframes stamp-marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .stamp-carousel__track {
+      animation-duration: 22s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stamp-carousel__viewport {
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+    }
+
+    .stamp-carousel__track {
+      animation: none;
+      transform: none;
+      will-change: auto;
+    }
+
+    .stamp-carousel__duplicate {
+      display: none;
+    }
+  }
+</style>

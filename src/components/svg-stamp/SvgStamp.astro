@@ -1,0 +1,161 @@
+---
+import { createStampFilterId } from "./svg-stamp";
+
+interface Props {
+  color?: string;
+  roughness?: number;
+  grit?: number;
+  angle?: number;
+  bleed?: number;
+  opacity?: number;
+  seed?: number;
+  scale?: number;
+  class?: string;
+}
+
+const {
+  color = "#1a1a1a",
+  roughness = 2,
+  grit = 16,
+  angle = 0,
+  bleed = 0.4,
+  opacity = 0.8,
+  seed = 42,
+  scale = 1,
+  class: className = "",
+} = Astro.props as Props;
+
+const clamp = (value: number, minimum: number, maximum: number) =>
+  Math.min(Math.max(Number.isFinite(value) ? value : minimum, minimum), maximum);
+
+const normalizedHex = /^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i.test(color)
+  ? color.slice(1)
+  : "1a1a1a";
+const expandedHex =
+  normalizedHex.length === 3
+    ? [...normalizedHex].map((character) => character + character).join("")
+    : normalizedHex;
+const red = Number.parseInt(expandedHex.slice(0, 2), 16) / 255;
+const green = Number.parseInt(expandedHex.slice(2, 4), 16) / 255;
+const blue = Number.parseInt(expandedHex.slice(4, 6), 16) / 255;
+const safeOpacity = clamp(opacity, 0, 1);
+const colorMatrixValues =
+  `0 0 0 0 ${red.toFixed(3)}  0 0 0 0 ${green.toFixed(3)}  ` +
+  `0 0 0 0 ${blue.toFixed(3)}  0 0 0 ${safeOpacity.toFixed(2)} 0`;
+
+const gritStrength = clamp(grit, 0, 100) / 100;
+const alphaMultiplier = (10 + gritStrength * 26).toFixed(1);
+const alphaOffset = (-3 - (1 - gritStrength) * 9).toFixed(1);
+const gritMatrixValues =
+  `1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 ${alphaMultiplier} ${alphaOffset}`;
+
+const safeBleed = clamp(bleed, -10, 10);
+const morphOperator = safeBleed >= 0 ? "dilate" : "erode";
+const morphRadius = Math.abs(safeBleed).toFixed(1);
+const safeRoughness = clamp(roughness, 0, 40);
+const safeSeed = Math.round(clamp(seed, 0, 999999));
+const safeAngle = clamp(angle, -180, 180);
+const safeScale = clamp(scale, 0.1, 4);
+const filterId = createStampFilterId();
+const transformStyle = `--svg-stamp-angle: ${safeAngle}deg; --svg-stamp-scale: ${safeScale};`;
+const filterStyle = `filter: url(#${filterId})`;
+---
+
+<div class={`svg-stamp ${className}`} style={transformStyle}>
+  <svg
+    class="svg-stamp__filter"
+    aria-hidden="true"
+    focusable="false"
+    width="0"
+    height="0"
+  >
+    <defs>
+      <filter id={filterId} x="-40%" y="-40%" width="180%" height="180%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.045"
+          numOctaves="4"
+          seed={safeSeed}
+          result="edgeNoise"
+        />
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="edgeNoise"
+          scale={safeRoughness}
+          xChannelSelector="R"
+          yChannelSelector="G"
+          result="displacedGraphic"
+        />
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.19"
+          numOctaves="3"
+          seed={safeSeed + 31}
+          result="gritNoise"
+        />
+        <feColorMatrix
+          in="gritNoise"
+          type="matrix"
+          values={gritMatrixValues}
+          result="gritMask"
+        />
+        <feMorphology
+          in="displacedGraphic"
+          operator={morphOperator}
+          radius={morphRadius}
+          result="morphedGraphic"
+        />
+        <feComposite
+          in="morphedGraphic"
+          in2="gritMask"
+          operator="out"
+          result="stampedVector"
+        />
+        <feColorMatrix
+          in="stampedVector"
+          type="matrix"
+          values={colorMatrixValues}
+        />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="svg-stamp__content" style={filterStyle}>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .svg-stamp {
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(var(--svg-stamp-angle)) scale(var(--svg-stamp-scale));
+    transform-origin: center;
+  }
+
+  .svg-stamp__filter {
+    position: absolute;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .svg-stamp__content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .svg-stamp__content :global(svg),
+  .svg-stamp__content :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+</style>
