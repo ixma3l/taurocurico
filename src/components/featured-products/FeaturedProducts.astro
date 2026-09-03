@@ -1,0 +1,275 @@
+---
+import { featuredProducts } from "@/data/featured-products.data";
+---
+
+<section
+  class="featured-products container"
+  aria-labelledby="featured-products-heading"
+  data-featured-products
+>
+  <div class="featured-products__header">
+    <h2 id="featured-products-heading">Productos destacados</h2>
+
+    <div
+      class="featured-products__controls"
+      data-featured-products-controls
+      role="group"
+      aria-label="Controles de productos destacados"
+    >
+      <button
+        class="featured-products__arrow"
+        type="button"
+        data-featured-products-previous
+        aria-label="Producto anterior"
+        aria-disabled="true"
+        disabled
+      >
+        <span aria-hidden="true">‹</span>
+      </button>
+      <span class="featured-products__separator" aria-hidden="true">|</span>
+      <button
+        class="featured-products__arrow"
+        type="button"
+        data-featured-products-next
+        aria-label="Producto siguiente"
+        aria-disabled="false"
+      >
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="featured-products__viewport">
+    <ul
+      class="featured-products__track"
+      data-featured-products-track
+      aria-label="Productos destacados"
+    >
+      {
+        featuredProducts.map((product) => (
+          <li class="featured-products__item" data-featured-product>
+            <a
+              class="featured-products__link"
+              href={`/timbres/${product.brandSlug}/${product.familySlug}/${product.slug}`}
+            >
+              <span class="featured-products__media">
+                <img
+                  src={product.images.default}
+                  alt={product.modelName}
+                  width="300"
+                  height="300"
+                  loading="lazy"
+                />
+              </span>
+              <h3>{product.modelName}</h3>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<script>
+  import { initAllFeaturedProductsCarousels } from "./featured-products";
+
+  const init = () => initAllFeaturedProductsCarousels();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+
+  document.addEventListener("astro:page-load", init);
+</script>
+
+<style>
+  .featured-products {
+    --featured-products-visible-count: 1;
+    --featured-products-current-index: 0;
+    --featured-products-gap: 1.25rem;
+
+    margin-block: clamp(1.5rem, 4vw, 2.5rem);
+    padding: 1.5rem 1.75rem 2.25rem;
+    border: 1px solid #e1e1e1;
+    background: var(--white);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 3%);
+  }
+
+  .featured-products__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .featured-products__header h2 {
+    color: #333;
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: -0.01875rem;
+  }
+
+  .featured-products__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    user-select: none;
+  }
+
+  .featured-products__controls[hidden] {
+    display: none;
+  }
+
+  .featured-products__arrow {
+    display: grid;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: #858585;
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.125rem;
+    line-height: 1;
+    transition: color 150ms ease;
+  }
+
+  .featured-products__arrow:hover:not(:disabled),
+  .featured-products__arrow:focus-visible {
+    color: #333;
+  }
+
+  .featured-products__arrow:focus-visible {
+    outline: 2px solid var(--turquoise);
+    outline-offset: 2px;
+  }
+
+  .featured-products__arrow:disabled {
+    cursor: default;
+    opacity: 0.35;
+  }
+
+  .featured-products__separator {
+    color: #ccc;
+    font-size: 0.8125rem;
+    font-weight: 300;
+  }
+
+  .featured-products__viewport {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .featured-products__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc(
+      (100% - (var(--featured-products-visible-count) - 1) * var(--featured-products-gap)) /
+        var(--featured-products-visible-count)
+    );
+    gap: var(--featured-products-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    transform: translateX(
+      calc(
+        (-100% - var(--featured-products-gap)) *
+          var(--featured-products-current-index) /
+          var(--featured-products-visible-count)
+      )
+    );
+    transition: transform 350ms ease;
+  }
+
+  .featured-products__item {
+    min-width: 0;
+  }
+
+  .featured-products__link {
+    display: block;
+    min-width: 0;
+    color: #282828;
+    text-decoration: none;
+  }
+
+  .featured-products__media {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    place-items: center;
+    background: #f1f2f4;
+  }
+
+  .featured-products__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 350ms ease;
+  }
+
+  .featured-products__link h3 {
+    overflow: hidden;
+    margin-top: 0.875rem;
+    color: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .featured-products__link:hover h3,
+  .featured-products__link:focus-visible h3 {
+    color: var(--turquoise);
+    text-decoration: underline;
+  }
+
+  .featured-products__link:hover img,
+  .featured-products__link:focus-visible img {
+    transform: scale(1.03);
+  }
+
+  .featured-products__link:focus-visible {
+    outline: 2px solid var(--turquoise);
+    outline-offset: 3px;
+  }
+
+  @media (min-width: 481px) {
+    .featured-products {
+      --featured-products-visible-count: 2;
+    }
+  }
+
+  @media (min-width: 721px) {
+    .featured-products {
+      --featured-products-visible-count: 3;
+    }
+  }
+
+  @media (min-width: 993px) {
+    .featured-products {
+      --featured-products-visible-count: 4;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .featured-products {
+      padding: 1.125rem 1rem 1.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .featured-products__track,
+    .featured-products__media img {
+      transition: none;
+    }
+  }
+</style>

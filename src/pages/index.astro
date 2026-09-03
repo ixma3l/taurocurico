@@ -2,10 +2,12 @@
 import Brand from '@/components/Brand.astro';
 import Layout from '@/layouts/Layout.astro';
 import HeroSlider from '@/components/hero-slider/HeroSlider.astro';
+import FeaturedProducts from '@/components/featured-products/FeaturedProducts.astro';
 import { sliderItems } from '@/data/hero-slider.data';
 ---
 
 <Layout title='Tauro Curico'>
     <HeroSlider items={sliderItems} />
+    <FeaturedProducts />
     <Brand />
 </Layout>
